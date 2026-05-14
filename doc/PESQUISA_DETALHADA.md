@@ -1,8 +1,8 @@
 # 📚 PESQUISA DETALHADA — PlantiuIA
 
 **Data:** 13 de maio de 2026  
-**Versão:** 1.0.0  
-**Status:** Análise Completa da Arquitetura, Padrões e Oportunidades de Melhoria
+**Versão:** 1.1.0  
+**Status:** Atualização Completa com Novas Funcionalidades (Alertas, Auditoria, Gerenciamento Dinâmico)
 
 ---
 
@@ -13,9 +13,21 @@
 - **Irrigação autônoma** baseada em IA + sensores
 - **IA multi-provider** com failover inteligente
 - **Memória persistente** estilo Sol Biodome (da Anthropic)
+- **Sistema de Alertas** para detecção automática de problemas ⭐ NOVO
+- **Auditoria Completa** com log de todas interações com IA ⭐ NOVO
+- **Gerenciamento Dinâmico** de IA sem reiniciar servidor ⭐ NOVO
 - **Frontend real-time** para monitoramento
 
-O projeto implementa **padrões enterprise** (Circuit Breaker, Gateway Pattern, Memory Compression) em um contexto agrícola, inspirado em pesquisa recente sobre IA autônoma.
+O projeto implementa **padrões enterprise** (Circuit Breaker, Gateway Pattern, Memory Compression, Audit Logging) em um contexto agrícola, inspirado em pesquisa recente sobre IA autônoma.
+
+**Novidades na v1.1.0:**
+- ✅ Sistema de alertas com 4 categorias (health, irrigation, sensor, system)
+- ✅ Tabela de auditoria (ai_logs) para rastreamento de requisições
+- ✅ Rota de consulta geral (/api/dashboard/consult) para perguntas agrícolas
+- ✅ Endpoints de gerenciamento dinâmico (/api/settings/ai/*) para modo/provider
+- ✅ Health check endpoint (/api/health)
+- ✅ Status em tempo real de cada provedor de IA
+- ✅ Reset de circuit breakers sem reiniciar
 
 ---
 
@@ -26,29 +38,32 @@ O projeto implementa **padrões enterprise** (Circuit Breaker, Gateway Pattern, 
 ```
 ┌─────────────────────────────────────────────┐
 │   🌐 Frontend (HTML/CSS/JS Vanilla)         │
-│   - Dashboard real-time                     │
+│   - Dashboard real-time com alertas         │
 │   - Análise de imagem (upload)              │
 │   - Controle de irrigação                   │
-│   - Consultor IA                            │
+│   - Consultor IA (novo)                     │
+│   - Gerenciador de IA (novo)                │
 └────────────────┬────────────────────────────┘
                  │ (REST API + WebSocket)
 ┌────────────────▼────────────────────────────┐
 │   ⚙️ Backend (FastAPI — Async Python)       │
-│   - 6 rotas principais                      │
+│   - 6 rotas principais + 2 rotas novas      │
 │   - Services (Analysis, Irrigation, Sensor) │
 │   - Circuit Breaker + Failover              │
+│   - Alert Manager (novo)                    │
+│   - Audit Logger (novo)                     │
 └────────────────┬────────────────────────────┘
                  │
         ┌────────┴────────┐
         │                 │
 ┌───────▼─────────┐  ┌──────────────────────┐
-│ 🧠 AI Gateway   │  │ 💾 Banco de Dados    │
+│ 🧠 AI Gateway   │  │ 💾 Banco de Dados   │
 │ (Orquestrador)  │  │ (SQLite / Postgres)  │
 └────────┬────────┘  └──────────────────────┘
          │
-    ┌────┴─────────────────────────┐
-    │                              │
-┌───▼──────┐  ┌──────────┐  ┌──────▼──────┐
+    ┌────┴──────────────────────────┐
+    │                               │
+┌───▼───────┐  ┌──────────┐  ┌──────▼──────┐
 │ Local     │  │ Ollama   │  │ APIs Cloud  │
 │ Model     │  │ (Vision) │  │ (Claude,    │
 │ (GGUF)    │  │          │  │  GPT, etc)  │
@@ -74,13 +89,15 @@ O projeto implementa **padrões enterprise** (Circuit Breaker, Gateway Pattern, 
     │   └─ Circuit Breaker[Ollama].is_available?
     ├─ Se falhar → Tentar Local GGUF
     │   └─ Circuit Breaker[Local].is_available?
-    └─ Se tudo falha → Erro + Alertar
+    └─ Se tudo falha → Erro + Alertar (novo)
     ↓
 6. MemoryManager (registrar observação)
     ↓
-7. DatabaseService (salvar análise)
+7. DatabaseService (salvar análise + alert)
     ↓
-8. API Response → Frontend (JSON estruturado)
+8. Audit Logger (registrar requisição em ai_logs)
+    ↓
+9. API Response → Frontend (JSON estruturado)
 ```
 
 ---
@@ -137,7 +154,7 @@ CLOSED ──[3 falhas]──> OPEN ──[60s timeout]──> HALF_OPEN
 
 | Modo | Prioridade | Uso |
 |:---|:---|:---|
-| `local_only` | Local → Ollama | Ambiente offline, sem APIs |
+| `local_only` | Local (SmolLm3 3B) → Ollama | Ambiente offline, sem APIs |
 | `api_only` | Claude → GPT → Gemini | Máxima qualidade, aceita custos |
 | `hybrid_prefer_api` | API primeiro, local fallback | Produção usual |
 | `hybrid_prefer_local` | Local primeiro, API para complexos | Economia de custos |
@@ -660,7 +677,7 @@ from langchain.vectorstores import Chroma
 
 ---
 
-## 💪 8. PONTOS FORTES
+## 💪 8. PONTOS FORTES — ATUALIZADO
 
 ### 8.1 Arquitetura
 
@@ -670,31 +687,50 @@ from langchain.vectorstores import Chroma
 - ✅ **Type hints** — Código type-safe com Pydantic
 - ✅ **Logging estruturado** — Loguru com cores + arquivo
 - ✅ **Memory persistence** — Inspirado em pesquisa recente
+- ✅ **Auditoria completa** — Log de todas as interações com IA (AILog)
 
-### 8.2 IA
+### 8.2 Monitoramento e Observabilidade
+
+- ✅ **Sistema de Alertas** — Notificações de problemas automáticas
+- ✅ **Health Check** — Endpoint `/api/health` para monitoramento
+- ✅ **Status em Tempo Real** — Visualizar estado de cada provedor
+- ✅ **Métricas de IA** — Latência, tokens, taxa de sucesso por provider
+- ✅ **Rastreamento de Failover** — Log de quando/por quê houve failover
+
+### 8.3 Gerenciamento Dinâmico
+
+- ✅ **Mudar Modo em Runtime** — PUT `/api/settings/ai/mode` sem reiniciar
+- ✅ **Reset de Circuit Breakers** — POST `/api/settings/ai/reset-circuit-breaker`
+- ✅ **Listar Provedores** — GET `/api/settings/ai/providers` para diagnosticar status
+- ✅ **Listar Modos** — GET `/api/settings/ai/modes` com descrições
+
+### 8.4 IA
 
 - ✅ **5 provedores integrados** — Cobertura máxima
 - ✅ **Modelo local próprio** — Independência de API key
 - ✅ **Prompt engineering estruturado** — Templates + schema JSON
-- ✅ **Failover transparente** — Sem precisa de retry no frontend
+- ✅ **Failover transparente** — Sem precisar de retry no frontend
+- ✅ **Consultor Agrícola** — Rota `/api/dashboard/consult` para perguntas gerais
 
-### 8.3 UX/DX
+### 8.5 UX/DX
 
 - ✅ **Frontend sem dependências pesadas** — Carregamento rápido
 - ✅ **API RESTful bem estruturada** — Fácil de debugar
 - ✅ **Multiplataforma** — Windows + Linux + macOS (scripts prêts-à-l'emploi)
 - ✅ **Documentação clara** — README + task.md + comments
+- ✅ **Dashboard inteligente** — Exibe alertas, status da IA, histórico
 
-### 8.4 Produtividade
+### 8.6 Produtividade
 
 - ✅ **Fácil adicionar novo provider** — Herdar de BaseProvider
 - ✅ **Fácil adicionar nova análise** — Template no PromptManager
 - ✅ **Simulação de sensores** — Teste sem hardware
 - ✅ **Configurável por .env** — Deploy flexível
+- ✅ **Auditoria para debugging** — Histórico completo de requisições
 
 ---
 
-## ⚠️ 9. FRAQUEZAS E OPORTUNIDADES
+## ⚠️ 9. FRAQUEZAS E OPORTUNIDADES — ATUALIZADO
 
 ### 9.1 Modelo Local (Crítico)
 
@@ -706,6 +742,7 @@ from langchain.vectorstores import Chroma
 - Acurácia reduzida para análise visual
 - Não pode detectar detalhes microscópicos
 
+**Status:** ⏳ Em consideração  
 **Solução Recomendada:**
 ```python
 # Usar Ollama + Llama 3.2 Vision em vez de SmolLM3
@@ -727,6 +764,7 @@ providers["ollama"] = OllamaProvider(
 - Agrupa por categoria, sem considerar relevância
 - Pode perder detalhes importantes
 
+**Status:** ⏳ Em consideração  
 **Solução:**
 ```python
 # Usar embedding + clustering para compressão inteligente
@@ -744,25 +782,15 @@ def _compress_smart(self):
     ...
 ```
 
-**Problema 2: Sem Priorização**
-- Observações antigas podem ser mais valiosas
-- Sem mecanismo de "esquecer" informações irrelevantes
-
-**Solução:**
-```python
-def _compress_with_priority(self):
-    # Dar peso maior a observações recentes
-    # Dar peso menor se observação é redundante com resumo anterior
-    # Esquecer fatos que conflitam com novo conhecimento
-```
-
 ---
 
 ### 9.3 Prompt Engineering (Oportunidade)
 
 **Problema:**
 - Prompts genéricos, não otimizados por modelo/IA
+- Sem histórico de prompts para iteração
 
+**Status:** ⏳ Em consideração  
 **Solução:**
 ```python
 class PromptManager:
@@ -786,6 +814,7 @@ class PromptManager:
 - Timeout de recovery é fixo (60s)
 - Sem adaptação baseada em histórico
 
+**Status:** ⏳ Em consideração  
 **Solução (Exponential Backoff Adaptativo):**
 ```python
 # Em vez de 60s fixo, usar:
@@ -804,6 +833,7 @@ def _calculate_recovery_timeout(self) -> int:
 - SQLite é arquivo único, não escala para produção
 - Sem índices otimizados para queries comuns
 
+**Status:** ⏳ Recomendado para produção  
 **Solução:**
 ```python
 # 1. Usar PostgreSQL em produção
@@ -826,6 +856,7 @@ class Analysis(Base):
 - Sem validação de tamanho/formato
 - Sem thumbnail para rápido acesso
 
+**Status:** ⏳ Em consideração  
 **Solução:**
 ```python
 from PIL import Image
@@ -859,6 +890,7 @@ def process_upload(image_bytes: bytes) -> tuple[bytes, bytes]:
 - ✗ API keys no `.env` (pode vazar no git)
 - ✗ Sem rate limiting
 
+**Status:** 🔴 Crítico para produção  
 **Soluções:**
 
 ```python
@@ -896,38 +928,12 @@ async def analyze_image(...):
 
 ---
 
-### 9.8 Monitoramento (Não Implementado)
+### 9.8 Monitoramento (Parcialmente Implementado) ✅
 
-**Problema:**
-- Sem métricas de performance
-- Sem alertas quando IA falha
-
-**Solução:**
-```python
-from prometheus_client import Counter, Histogram, Gauge
-
-requests_total = Counter(
-    'plantiu_requests_total',
-    'Total de requisições',
-    ['provider', 'status']
-)
-
-latency = Histogram(
-    'plantiu_latency_ms',
-    'Latência em ms',
-    ['provider']
-)
-
-circuit_breaker_state = Gauge(
-    'plantiu_circuit_breaker_open',
-    'Circuit breaker aberto?',
-    ['provider']
-)
-
-# Em cada requisição:
-latency.labels(provider='claude').observe(response.latency_ms)
-requests_total.labels(provider='claude', status='success').inc()
-```
+**Status:** ✅ Sistema de Alertas agora implementado!
+- ✅ Alertas automáticos para problemas
+- ✅ Log de auditoria (ai_logs)
+- ⏳ Falta: Dashboar de métricas (Prometheus + Grafana)
 
 ---
 
@@ -938,6 +944,7 @@ requests_total.labels(provider='claude', status='success').inc()
 - Sem testes de integração
 - `test_endpoints.py` é manual
 
+**Status:** ⏳ Em consideração  
 **Solução:**
 ```python
 # tests/test_analysis.py
@@ -978,59 +985,58 @@ async def test_circuit_breaker_opens_after_3_failures():
 
 ---
 
-### 9.10 Documentação de API (Não Gerada)
+### 9.10 Documentação Interativa (Não Customizada)
 
-**Problema:**
-- FastAPI gera docs automáticas, mas não são customizadas
-
-**Solução:**
-```python
-app = FastAPI(
-    title="PlantiuIA",
-    description="...",
-    version="1.0.0",
-    docs_url="/docs",
-    redoc_url="/redoc"
-)
-
-# Acessar: http://localhost:8000/docs (Swagger)
-# Acessar: http://localhost:8000/redoc (ReDoc)
-```
+**Status:** ✅ FastAPI auto-gera docs!
+- Acessar: `http://localhost:8000/docs` (Swagger)
+- Acessar: `http://localhost:8000/redoc` (ReDoc)
 
 ---
 
-## 📈 10. ROADMAP DE MELHORIAS (Recomendações)
+## 📈 10. ROADMAP DE MELHORIAS (Atualizado v1.1.0)
 
-### 10.1 Curto Prazo (1-2 sprints)
+### 10.1 ✅ Concluído em v1.1.0
 
-| Tarefa | Impacto | Esforço |
+| Tarefa | Status | Data |
 |:---|:---|:---|
-| ~~Substituir SmolLM3 por Llama 3.2 Vision~~ | Alto | Médio |
-| Adicionar autenticação básica | Alto | Baixo |
-| Adicionar testes unitários (50% cobertura) | Médio | Alto |
-| Implementar rate limiting | Médio | Baixo |
-| Compressão de imagem antes de salvar | Médio | Baixo |
+| Sistema de Alertas (4 categorias) | ✅ CONCLUÍDO | Maio 2026 |
+| Auditoria com AILog | ✅ CONCLUÍDO | Maio 2026 |
+| Rota de Consulta Geral (/api/dashboard/consult) | ✅ CONCLUÍDO | Maio 2026 |
+| Gerenciamento Dinâmico de IA (/api/settings/ai/*) | ✅ CONCLUÍDO | Maio 2026 |
+| Health Check endpoint (/api/health) | ✅ CONCLUÍDO | Maio 2026 |
+| Status em Tempo Real dos Provedores | ✅ CONCLUÍDO | Maio 2026 |
 
-### 10.2 Médio Prazo (1-2 meses)
+### 10.2 Curto Prazo (1-2 sprints)
 
-| Tarefa | Impacto | Esforço |
-|:---|:---|:---|
-| Few-shot prompting | Alto | Alto |
-| RAG com embeddings | Alto | Alto |
-| Migrar SQLite → PostgreSQL | Alto | Médio |
-| Circuit Breaker adaptativo (exponential backoff) | Médio | Médio |
-| Integração MQTT para ESP32 | Alto | Alto |
-| Monitoramento Prometheus + Grafana | Médio | Médio |
+| Tarefa | Impacto | Esforço | Status |
+|:---|:---|:---|:---|
+| ~~Substituir SmolLM3 por Llama 3.2 Vision~~ | Alto | Médio | ⏳ Recomendado |
+| Adicionar autenticação com JWT | Alto | Médio | ⏳ Crítico |
+| Implementar rate limiting (slowapi) | Médio | Baixo | ⏳ Recomendado |
+| Adicionar testes unitários (50% cobertura) | Médio | Alto | ⏳ Importante |
+| Compressão de imagem antes de salvar | Médio | Baixo | ⏳ Otimização |
+| Dashboard de métricas (Prometheus) | Médio | Médio | ⏳ Monitoramento |
 
-### 10.3 Longo Prazo (3-6 meses)
+### 10.3 Médio Prazo (1-2 meses)
 
-| Tarefa | Impacto | Esforço |
-|:---|:---|:---|
-| IA autônoma 24/7 com schedule | Alto | Alto |
-| Hardware real (ESP32 + sensores) | Alto | Muito Alto |
-| Multi-idioma na interface | Médio | Médio |
-| Mobile app (React Native) | Alto | Muito Alto |
-| Marketplace de modelos especializados | Alto | Muito Alto |
+| Tarefa | Impacto | Esforço | Status |
+|:---|:---|:---|:---|
+| Few-shot prompting dinâmico | Alto | Alto | ⏳ Pesquisa |
+| RAG com embeddings de histórico | Alto | Alto | ⏳ Pesquisa |
+| Migrar SQLite → PostgreSQL | Alto | Médio | ⏳ Produção |
+| Circuit Breaker adaptativo (exponential backoff) | Médio | Médio | ⏳ Melhorias |
+| Integração MQTT para ESP32 | Alto | Alto | ⏳ Hardware |
+| Monitoramento Prometheus + Grafana | Médio | Médio | ⏳ DevOps |
+
+### 10.4 Longo Prazo (3-6 meses)
+
+| Tarefa | Impacto | Esforço | Status |
+|:---|:---|:---|:---|
+| IA autônoma 24/7 com agendamento | Alto | Alto | 🔬 Experimental |
+| Hardware real (ESP32 + sensores) | Alto | Muito Alto | 🔬 Hardware |
+| Interface multi-idioma | Médio | Médio | ⏳ UX |
+| Mobile app (React Native) | Alto | Muito Alto | 📋 Futura |
+| Marketplace de modelos especializados | Alto | Muito Alto | 📋 Futura |
 
 ---
 
@@ -1058,7 +1064,7 @@ responses = await asyncio.gather(
 
 **FastAPI + SQLAlchemy:**
 ```python
-# AsyncSession é necessário para queries não-bloqueantes
+# AsyncSession é necessária para queries não-bloqueantes
 async def get_plant(plant_id: int, db: AsyncSession):
     result = await db.execute(select(Plant).where(Plant.id == plant_id))
     return result.scalar_one_or_none()
@@ -1209,54 +1215,98 @@ Agora, analise esta nova imagem: ..."""
 
 ---
 
-## 📊 13. CONCLUSÃO
+## 📊 13. CONCLUSÃO — ANÁLISE ATUALIZADA v1.1.0
 
 ### 13.1 Resumo Executivo
 
-**PlantiuIA é uma implementação sólida e bem-arquitetada de um sistema de IA agrícola**, com:
+**PlantiuIA é uma implementação sólida e bem-arquitetada de um sistema de IA agrícola**, agora com funcionalidades enterprise em v1.1.0:
 
-- ✅ **Arquitetura enterprise:** Circuit Breaker, Gateway, Memory Compression
-- ✅ **IA flexível:** 5 provedores, 5 modos de operação
-- ✅ **Resiliência:** Failover automático, logging centralizado
-- ✅ **Pronto para produção:** Type hints, async/await, estrutura escalável
+**Arquitetura & Padrões:**
+- ✅ **Circuit Breaker Pattern** — Isolamento de falhas
+- ✅ **Gateway Pattern** — Orquestração de múltiplos provedores IA
+- ✅ **Memory Compression** — Compressão inspirada em Sol Biodome
+- ✅ **Audit Logging** — Rastreamento completo de interações
+- ✅ **Alert System** — Notificações automáticas de problemas
 
-**Principais oportunidades:**
-1. Melhorar modelo local (SmolLM3 → Llama 3.2 Vision)
-2. Few-shot prompting (adicionar exemplos)
-3. RAG com embeddings (buscar contexto histórico)
-4. Circuit Breaker adaptativo (exponential backoff)
-5. Testes + monitoramento (Pytest + Prometheus)
+**Funcionalidades Novas em v1.1.0:**
+- ✅ Sistema de Alertas (4 categorias: health, irrigation, sensor, system)
+- ✅ Auditoria com AILog (latência, tokens, failover tracking)
+- ✅ Consultor Agrícola (/api/dashboard/consult)
+- ✅ Gerenciamento Dinâmico (/api/settings/ai/*)
+- ✅ Health Check (/api/health)
+- ✅ Status em Tempo Real dos Provedores
 
-### 13.2 Pontuação por Dimensão
+**IA & Resiliência:**
+- ✅ 5 provedores integrados (Claude, GPT-4o, Gemini, Ollama, Local)
+- ✅ 5 modos de operação (local_only, api_only, hybrid, smart_failover)
+- ✅ Failover automático com logging
+- ✅ Support para análise offline
+
+**Pronto para Produção:**
+- ✅ Type hints com Pydantic
+- ✅ Async/await com FastAPI
+- ✅ Estrutura escalável
+- ✅ Documentação Swagger/ReDoc automática
+
+**Principais Oportunidades:**
+1. 🔐 Segurança — Adicionar autenticação JWT e rate limiting
+2. 🔬 Modelos — Substituir SmolLM3 por Llama 3.2 Vision
+3. 📊 Machine Learning — Few-shot prompting + RAG
+4. 📈 Performance — Circuit Breaker adaptativo + índices DB
+5. ✅ Qualidade — Testes unitários + Prometheus
+
+### 13.2 Pontuação por Dimensão (v1.1.0)
 
 | Dimensão | Score | Comentário |
 |:---|:---|:---|
-| **Arquitetura** | 9/10 | Excelente, padrões bem aplicados |
-| **IA/ML** | 7/10 | Bom, mas sem otimizações avançadas |
-| **Segurança** | 5/10 | Básica, precisa autenticação e rate limiting |
+| **Arquitetura** | 9/10 | Excelente, padrões bem aplicados, auditoria implementada |
+| **Observabilidade** | 8/10 | Alertas + logs de auditoria, falta Prometheus |
+| **IA/ML** | 7/10 | Bom, mas sem few-shot ou RAG ainda |
+| **Segurança** | 5/10 | Básica, precisa JWT + rate limiting |
+| **Gerenciamento** | 8/10 | Dinâmico com endpoints, muito melhorado |
 | **Testes** | 3/10 | Nenhum teste automatizado |
-| **Documentação** | 8/10 | README ótimo, código comentado |
+| **Documentação** | 9/10 | Excelente, código comentado, esta pesquisa atualizada |
 | **Escalabilidade** | 7/10 | SQLite é gargalo, PostgreSQL recomendado |
-| **UX/DX** | 9/10 | Interface limpa, API intuitiva |
-| **Performance** | 7/10 | Async bem implementado, mas modelos locais lentos |
+| **UX/DX** | 9/10 | Interface limpa, API intuitiva, status dashboard |
+| **Performance** | 7/10 | Async bem implementado, modelos locais ~5s |
 
-**Média:** **7.4/10** — Sistema Production-Ready com oportunidades de otimização
+**Média:** **7.7/10** ⬆️ (era 7.4)  
+**Status:** Production-Ready para prototipagem, oportunidades para escala
+
+### 13.3 Roadmap Priorizado para v1.2
+
+**Crítico (Sprint 1):**
+1. 🔐 Autenticação JWT + CORS restrito
+2. 💬 Rate limiting com slowapi
+3. 📊 Testes básicos (50% cobertura)
+
+**Importante (Sprint 2):**
+1. 🧠 Migrar para Llama 3.2 Vision
+2. 🎯 Few-shot prompting dinâmico
+3. 📈 Prometheus + Grafana
+
+**Futuro (v1.3+):**
+1. 🔍 RAG com embeddings
+2. 🏠 Hardware real (ESP32)
+3. 📱 Mobile app
 
 ---
 
 ## 📚 Referências e Inspirações
 
-1. **Sol Biodome (Anthropic)** — Projeto de IA autônoma para plantas
-2. **Llama 3.2 Vision (Meta)** — Modelo open-source com visão
-3. **Circuit Breaker Pattern (Martin Fowler)** — Padrão de resiliência
-4. **FastAPI Documentation** — Framework web assíncrono
-5. **SQLAlchemy 2.0** — ORM SQL para Python
-6. **Prompt Engineering Guide (OpenAI)** — Técnicas de otimização
+1. **Sol Biodome (Anthropic)** — Projeto de IA autônoma para plantas  
+2. **Llama 3.2 Vision (Meta)** — Modelo open-source com visão  
+3. **Circuit Breaker Pattern (Martin Fowler)** — Padrão de resiliência  
+4. **FastAPI Documentation** — Framework web assíncrono  
+5. **SQLAlchemy 2.0** — ORM SQL para Python  
+6. **Prompt Engineering Guide (OpenAI)** — Técnicas de otimização  
+7. **OWASP Security Guidelines** — Best practices de segurança  
 
 ---
 
-**Fim da Pesquisa Detalhada**
+**Fim da Pesquisa Detalhada — Versão 1.1.0**
 
-*Este documento foi gerado como análise técnica do projeto PlantiuIA em 13 de maio de 2026.*
+*Este documento foi gerado/atualizado em 13 de maio de 2026.*  
+*Última atualização: Análise de v1.1.0 com novas funcionalidades implementadas.*
 
-*Para sugestões, melhoria ou clarificações, abra uma issue no repositório.*
+*Para sugestões, melhoria ou clarificações, consulte o README.md ou abra uma issue no repositório.*

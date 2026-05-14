@@ -148,8 +148,9 @@ input:focus, select:focus, textarea:focus {
   background: linear-gradient(135deg, var(--accent), var(--green-700));
   border-radius: var(--radius-md);
   display: flex; align-items: center; justify-content: center;
-  font-size: 1.3rem;
   box-shadow: var(--shadow-glow);
+  color: #fff;
+  flex-shrink: 0;
 }
 
 .sidebar-title {
@@ -201,7 +202,16 @@ input:focus, select:focus, textarea:focus {
   color: var(--accent);
   font-weight: 600;
 }
-.nav-item .nav-icon { font-size: 1.1rem; width: 24px; text-align: center; }
+.nav-item .nav-icon {
+  width: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
+.nav-item.active .nav-icon,
+.nav-item:hover .nav-icon { opacity: 1; }
 
 .sidebar-footer {
   padding: var(--space-md) var(--space-lg);
@@ -356,8 +366,10 @@ input:focus, select:focus, textarea:focus {
   position: absolute;
   top: var(--space-lg);
   right: var(--space-lg);
-  font-size: 1.5rem;
-  opacity: 0.4;
+  opacity: 0.3;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 /* Color variants */
@@ -365,6 +377,11 @@ input:focus, select:focus, textarea:focus {
 .stat-card.blue .stat-value { color: var(--blue); }
 .stat-card.orange .stat-value { color: var(--orange); }
 .stat-card.purple .stat-value { color: var(--purple); }
+
+.stat-card.green .stat-icon { color: var(--status-excellent); }
+.stat-card.blue .stat-icon { color: var(--blue); }
+.stat-card.orange .stat-icon { color: var(--orange); }
+.stat-card.purple .stat-icon { color: var(--purple); }
 
 /* ============ Buttons ============ */
 .btn {
@@ -450,7 +467,14 @@ input:focus, select:focus, textarea:focus {
   background: var(--accent-glow);
 }
 
-.upload-zone .upload-icon { font-size: 2.5rem; margin-bottom: var(--space-md); opacity: 0.5; }
+.upload-zone .upload-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  opacity: 0.5;
+  color: var(--text-secondary);
+}
 .upload-zone .upload-text { font-size: 0.95rem; color: var(--text-secondary); }
 .upload-zone .upload-hint { font-size: 0.78rem; color: var(--text-dim); margin-top: var(--space-sm); }
 
@@ -494,6 +518,9 @@ input:focus, select:focus, textarea:focus {
   margin-bottom: var(--space-xs);
 }
 .diagnosis-value { font-size: 0.95rem; color: var(--text-primary); }
+
+.decision-value.irrigate { color: var(--status-excellent); font-weight: 700; }
+.decision-value.hold { color: var(--text-secondary); font-weight: 600; }
 
 /* ============ Sensor Gauge ============ */
 .gauge-container {
@@ -666,7 +693,14 @@ input:focus, select:focus, textarea:focus {
   padding: var(--space-2xl);
   color: var(--text-dim);
 }
-.empty-state .empty-icon { font-size: 3rem; margin-bottom: var(--space-md); opacity: 0.3; }
+.empty-state .empty-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: var(--space-md);
+  opacity: 0.3;
+  color: var(--text-secondary);
+}
 .empty-state .empty-text { font-size: 1rem; margin-bottom: var(--space-lg); }
 
 /* ============ Responsive ============ */

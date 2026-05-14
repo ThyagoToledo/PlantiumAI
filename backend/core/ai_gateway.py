@@ -16,6 +16,8 @@ from providers.ollama_provider import OllamaProvider
 from providers.claude_provider import ClaudeProvider
 from providers.openai_provider import OpenAIProvider
 from providers.gemini_provider import GeminiProvider
+from providers.blackbox_provider import BlackboxProvider
+from providers.minimax_provider import MinimaxProvider
 
 
 class AIGateway:
@@ -116,6 +118,32 @@ class AIGateway:
                 recovery_timeout=settings.cb_recovery_timeout,
             )
             logger.info("✅ Provedor Gemini configurado")
+
+        if settings.blackbox_api_key:
+            blackbox = BlackboxProvider(
+                api_key=settings.blackbox_api_key,
+                model=settings.blackbox_model,
+            )
+            self.providers["blackbox"] = blackbox
+            self.circuit_breakers["blackbox"] = CircuitBreaker(
+                name="blackbox",
+                failure_threshold=settings.cb_failure_threshold,
+                recovery_timeout=settings.cb_recovery_timeout,
+            )
+            logger.info("✅ Provedor BlackBox AI configurado")
+
+        if settings.minimax_api_key:
+            minimax = MinimaxProvider(
+                api_key=settings.minimax_api_key,
+                model=settings.minimax_model,
+            )
+            self.providers["minimax"] = minimax
+            self.circuit_breakers["minimax"] = CircuitBreaker(
+                name="minimax",
+                failure_threshold=settings.cb_failure_threshold,
+                recovery_timeout=settings.cb_recovery_timeout,
+            )
+            logger.info(f"✅ Provedor MiniMax configurado ({settings.minimax_model})")
 
         logger.info(
             f"🧠 AI Gateway inicializado | Modo: {self.mode.value} | "

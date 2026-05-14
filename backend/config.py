@@ -59,6 +59,14 @@ class Settings(BaseSettings):
     gemini_api_key: str = Field(default="")
     gemini_model: str = Field(default="gemini-2.0-flash")
 
+    # --- BlackBox AI ---
+    blackbox_api_key: str = Field(default="")
+    blackbox_model: str = Field(default="blackboxai/anthropic/claude-sonnet-4.6")
+
+    # --- MiniMax ---
+    minimax_api_key: str = Field(default="")
+    minimax_model: str = Field(default="MiniMax-Text-01")
+
     # --- Meteorologia ---
     openweather_api_key: str = Field(default="")
     openweather_city: str = Field(default="São Paulo")
@@ -108,6 +116,8 @@ class Settings(BaseSettings):
             self.anthropic_api_key
             or self.openai_api_key
             or self.gemini_api_key
+            or self.blackbox_api_key
+            or self.minimax_api_key
         )
 
     def has_local_model(self) -> bool:
@@ -126,6 +136,10 @@ class Settings(BaseSettings):
             providers.append("openai")
         if self.gemini_api_key:
             providers.append("gemini")
+        if self.blackbox_api_key:
+            providers.append("blackbox")
+        if self.minimax_api_key:
+            providers.append("minimax")
         return providers
 
 
