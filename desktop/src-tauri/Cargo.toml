@@ -1,0 +1,33 @@
+[package]
+name = "plantium-desktop"
+version = "0.1.0"
+description = "PlantiumAI — Monitoramento inteligente de micro estufas"
+authors = ["PlantiumAI"]
+edition = "2021"
+
+[lib]
+name = "plantium_desktop_lib"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = [] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "time", "sync"] }
+rusqlite = { version = "0.32", features = ["bundled"] }
+serialport = "4.5"
+rand = "0.8"
+chrono = { version = "0.4", features = ["serde"] }
+sha2 = "0.10"
+hex = "0.4"
+reqwest = { version = "0.12", default-features = false, features = ["rustls-tls", "blocking"] }
+
+[profile.release]
+panic = "abort"
+codegen-units = 1
+lto = true
+opt-level = "s"
+strip = true

@@ -1,0 +1,27 @@
+# Python
+venv/
+__pycache__/
+*.pyc
+
+# Secrets — nunca versionar
+.env
+!.env.example
+
+# Node / frontend
+node_modules/
+dist/
+
+# Rust / Tauri
+target/
+src-tauri/gen/schemas/
+
+# Dados locais e modelos de IA (GGUF ~2GB excede limite do GitHub)
+*.db
+*.gguf
+*.log
+SistemaLegado/backend/models_ai/.cache/
+SistemaLegado/backend/data/uploads/
+
+# Sistema
+Thumbs.db
+.DS_Store

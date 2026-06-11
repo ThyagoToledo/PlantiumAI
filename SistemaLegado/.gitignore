@@ -1,0 +1,50 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+*.egg-info/
+dist/
+build/
+eggs/
+*.egg
+.Python
+env/
+venv/
+.venv/
+
+# Environment
+.env
+*.env.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Database
+*.db
+*.sqlite3
+
+# Uploads
+backend/data/uploads/*
+!backend/data/uploads/.gitkeep
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Node (if used for frontend tooling)
+node_modules/
+
+# Docker
+.docker/
+
+# Modelos de IA Local (GGUF ~2GB)
+backend/models_ai/*.gguf
+*.gguf

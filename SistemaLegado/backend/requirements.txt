@@ -1,0 +1,40 @@
+# ============================================
+# PlantiuIA — Dependências Python
+# ============================================
+
+# --- Framework Web ---
+fastapi>=0.110.0
+uvicorn[standard]>=0.29.0
+python-multipart>=0.0.9
+websockets>=12.0
+
+# --- Banco de Dados ---
+sqlalchemy>=2.0.30
+aiosqlite>=0.20.0
+
+# --- IA Local (Modelo Próprio GGUF) ---
+llama-cpp-python>=0.3.0
+huggingface-hub>=0.25.0
+
+# --- IA - Provedores de API ---
+ollama>=0.3.0
+anthropic>=0.30.0
+openai>=1.30.0
+google-generativeai>=0.7.0
+
+# --- Processamento de Imagem ---
+Pillow>=10.0.0
+
+# --- HTTP Client ---
+httpx>=0.27.0
+
+# --- Configuração ---
+python-dotenv>=1.0.0
+pydantic>=2.7.0
+pydantic-settings>=2.3.0
+
+# --- Agendamento ---
+apscheduler>=3.10.0
+
+# --- Utilitários ---
+loguru>=0.7.0

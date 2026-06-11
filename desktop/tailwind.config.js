@@ -1,0 +1,29 @@
+/** @type {import('tailwindcss').Config} */
+export default {
+  content: ["./index.html", "./src/**/*.{ts,tsx}"],
+  theme: {
+    extend: {
+      colors: {
+        surface: {
+          DEFAULT: "#0d1117",
+          raised: "#161b22",
+          overlay: "#1c2128",
+          border: "#2d333b",
+        },
+        leaf: {
+          50: "#f0fdf4",
+          200: "#bbf7d0",
+          400: "#4ade80",
+          500: "#22c55e",
+          600: "#16a34a",
+          700: "#15803d",
+        },
+      },
+      fontFamily: {
+        sans: ["Inter", "Segoe UI", "system-ui", "sans-serif"],
+        mono: ["JetBrains Mono", "Consolas", "monospace"],
+      },
+    },
+  },
+  plugins: [],
+};

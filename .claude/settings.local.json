@@ -1,0 +1,9 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \".\" -Directory)",
+      "Bash(Select-Object Name)",
+      "Bash(mkdir -p \"C:\\\\Users\\\\Aluno\\\\Desktop\\\\PlantiumIA\\\\vault\\\\doc\\\\{_moc,_fleeting,_templates,atoms,projects,refs,archive}\")"
+    ]
+  }
+}
