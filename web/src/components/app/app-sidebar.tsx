@@ -65,6 +65,10 @@ export function AppSidebar() {
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><circle cx="12" cy="12" r="9" /><path d="M9.5 9.5a2.5 2.5 0 1 1 3.4 2.3c-.7.3-1.4.8-1.4 1.7v.3" /><circle cx="12" cy="17" r=".6" fill="currentColor" /></svg>
         {!collapsed && <span className="pl-navlabel">Guia rápido</span>}
       </button>
+      <a href="https://www.youtube.com/@PlantiumAI" target="_blank" rel="noopener" className="pl-navitem" title="Canal no YouTube" style={{ ...navBtnStyle, fontSize: 13 }}>
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="#FF0000" style={{ flexShrink: 0 }}><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z" /></svg>
+        {!collapsed && <span className="pl-navlabel">YouTube</span>}
+      </a>
       <button onClick={() => setCollapsed((p) => !p)} className="pl-navitem" style={{ ...navBtnStyle, fontSize: 13, color: "var(--pl-text-faint)" }}>
         <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" style={{ transform: collapsed ? "rotate(180deg)" : "none" }}><path d="M15 6l-6 6 6 6" /></svg>
         {!collapsed && <span className="pl-navlabel">Recolher menu</span>}

@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "PlantiumAI — Monitoramento inteligente de cultivo",
+  title: "PlantiumAI",
   description:
     "Plataforma de monitoramento para micro estufas, plantações verticais e containers com sensores IoT e IA.",
 };

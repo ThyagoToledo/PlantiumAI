@@ -80,6 +80,8 @@
 .plf-root .plf-team-card { transition: transform 0.2s, box-shadow 0.2s; }
 .plf-root .plf-team-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-float); }
 .plf-root .plf-footer a:hover { color: var(--text-base); }
+.plf-root .plf-yt:hover { background: #cc0000 !important; transform: translateY(-1px); }
+@media (max-width: 560px) { .plf-root .plf-yt-label { display: none; } }
 
 /* Alternância dos ícones sol/lua conforme o tema (padrão: escuro → mostra sol) */
 .plf-root .plf-moon { display: none; }
