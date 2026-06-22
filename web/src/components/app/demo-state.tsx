@@ -2,7 +2,10 @@
 
 import { createContext, useCallback, useContext, useEffect, useRef, useState } from "react";
 import {
+  buildSensor,
+  buildStats,
   computeHealth,
+  genData,
   INITIAL_ALERTS,
   INITIAL_LOCAIS,
   INITIAL_READING,
@@ -32,6 +35,7 @@ type DemoCtx = {
   alertList: Alert[]; activeAlerts: number; resolveAlert: (id: number) => void;
   settings: Settings; toggleSetting: (k: keyof Settings) => void;
   name: string; fullName: string; email: string; role: string; initials: string; signOut: () => void;
+  exportReport: (format: "pdf" | "csv") => Promise<void>;
 };
 
 const Ctx = createContext<DemoCtx | null>(null);
@@ -136,6 +140,60 @@ export function DemoProvider({
     showToast(apiKey ? `Local “${name2}” conectado via API` : `Local “${name2}” adicionado`);
   }, [showToast]);
 
+  const exportReport = useCallback(async (format: "pdf" | "csv") => {
+    const defs: { key: string; label: string; unit: string; dec: boolean; v: number }[] = [
+      { key: "soil", label: "Umidade do solo", unit: "%", dec: false, v: r.soil },
+      { key: "airT", label: "Temperatura do ar", unit: "°C", dec: true, v: r.airT },
+      { key: "airH", label: "Umidade do ar", unit: "%", dec: false, v: r.airH },
+      { key: "co2", label: "CO₂", unit: "ppm", dec: false, v: r.co2 },
+      { key: "ph", label: "pH do solo", unit: "", dec: true, v: r.ph },
+      { key: "lux", label: "Luminosidade", unit: "lux", dec: false, v: r.lux },
+    ];
+    const sensors = defs.map((m) => {
+      const b = buildSensor(m.key, m.v, m.unit, m.dec);
+      return { label: m.label, value: b.val, unit: m.unit, status: b.status };
+    });
+    const stats = buildStats(genData(period));
+    const dl = (blob: Blob, fname: string) => {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url; a.download = fname; a.click();
+      URL.revokeObjectURL(url);
+    };
+
+    if (format === "csv") {
+      const head = "Sensor;Mínimo;Máximo;Média;Desvio;Estado";
+      const lines = stats.map((s) => [s.name, s.min, s.max, s.avg, s.std, s.state].join(";"));
+      const csv = "﻿" + [head, ...lines].join("\r\n");
+      dl(new Blob([csv], { type: "text/csv;charset=utf-8" }), "relatorio-plantiumai.csv");
+      showToast("Arquivo CSV exportado");
+      return;
+    }
+
+    const payload = {
+      user: name,
+      location: "Estufa Central · SP",
+      period,
+      generatedAt: new Date().toLocaleString("pt-BR"),
+      health: computeHealth(r),
+      sensors,
+      stats,
+      alerts: alertList.filter((a) => !a.resolved).map((a) => ({ sev: a.sev, title: a.title, local: a.local, time: a.time })),
+    };
+    try {
+      const res = await fetch("/api/pdf/relatorio", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+      if (!res.ok) throw new Error(String(res.status));
+      dl(await res.blob(), "relatorio-plantiumai.pdf");
+      showToast("Relatório PDF gerado");
+    } catch {
+      showToast("Falha ao gerar PDF — serviço indisponível");
+    }
+  }, [r, period, alertList, name, showToast]);
+
   const firstName = name.split(" ")[0] || "Produtor";
   const initials = ((name.split(/\s+/)[0]?.[0] ?? "") + (name.split(/\s+/)[1]?.[0] ?? "")).toUpperCase() || "P";
   const activeAlerts = alertList.filter((a) => !a.resolved).length;
@@ -153,6 +211,7 @@ export function DemoProvider({
     alertList, activeAlerts, resolveAlert,
     settings, toggleSetting,
     name: firstName, fullName: name, email, role, initials, signOut,
+    exportReport,
   };
 
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;

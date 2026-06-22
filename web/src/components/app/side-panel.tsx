@@ -3,7 +3,7 @@
 import { useDemo } from "./demo-state";
 
 export function SidePanel() {
-  const { panel, closeAll, showToast, addLocal, signOut, fullName, email, role, initials } = useDemo();
+  const { panel, closeAll, showToast, addLocal, signOut, fullName, email, role, initials, exportReport } = useDemo();
   const title = panel === "profile" ? "Meu perfil" : panel === "addLocal" ? "Adicionar local" : panel === "data" ? "Dados & relatórios" : "Guia rápido";
 
   const genApiKey = () => { const el = document.getElementById("al-apikey") as HTMLInputElement | null; if (el) el.value = "pl_live_" + Math.random().toString(16).slice(2, 10) + Math.random().toString(16).slice(2, 6); };
@@ -70,10 +70,10 @@ export function SidePanel() {
             <div>
               <div style={{ fontSize: 13, fontWeight: 600, letterSpacing: ".04em", textTransform: "uppercase", color: "var(--pl-text-muted)", marginBottom: 10 }}>Exportar relatório</div>
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 10 }}>
-                <button className="pl-btn pl-btn--secondary" onClick={() => showToast("Relatório Excel gerado (.xlsx)")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "#16a34a" }} />Excel</button>
-                <button className="pl-btn pl-btn--secondary" onClick={() => showToast("Arquivo CSV exportado")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "var(--pl-info)" }} />CSV</button>
-                <button className="pl-btn pl-btn--secondary" onClick={() => showToast("PDF profissional gerado")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "#ef4444" }} />PDF resumido</button>
-                <button className="pl-btn pl-btn--secondary" onClick={() => showToast("PDF profissional gerado")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "#ef4444" }} />PDF técnico</button>
+                <button className="pl-btn pl-btn--secondary" onClick={() => exportReport("csv")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "#16a34a" }} />Excel/CSV</button>
+                <button className="pl-btn pl-btn--secondary" onClick={() => exportReport("csv")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "var(--pl-info)" }} />CSV</button>
+                <button className="pl-btn pl-btn--secondary" onClick={() => exportReport("pdf")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "#ef4444" }} />PDF resumido</button>
+                <button className="pl-btn pl-btn--secondary" onClick={() => exportReport("pdf")} style={{ justifyContent: "flex-start", gap: 9, padding: "13px 16px" }}><span style={{ width: 10, height: 10, borderRadius: 3, background: "#ef4444" }} />PDF técnico</button>
               </div>
               <p style={{ margin: "8px 0 0", fontSize: 12, color: "var(--pl-text-faint)" }}>PDF profissional com logo, propriedade, data/hora, gráficos, tabelas, indicadores coloridos e recomendações.</p>
             </div>

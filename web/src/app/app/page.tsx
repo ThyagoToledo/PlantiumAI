@@ -32,7 +32,7 @@ function SensorCard({ id, label, val, unit, sensor }: { id: string; label: strin
 }
 
 export default function DashboardPage() {
-  const { name, period, setPeriod, view, setView, r, health, secsAgo, theme, alertList, setPanel, showToast } = useDemo();
+  const { name, period, setPeriod, view, setView, r, health, secsAgo, theme, alertList, setPanel, exportReport } = useDemo();
 
   const So = buildSensor("soil", r.soil, "%", false);
   const AT = buildSensor("airT", r.airT, "°C", true);
@@ -167,9 +167,9 @@ export default function DashboardPage() {
               <div style={{ display: "flex", flexDirection: "column" }}><span style={{ fontSize: 14, fontWeight: 600 }}>Dados &amp; relatórios</span><span style={{ fontSize: 12, color: "var(--pl-text-muted)" }}>Importar planilhas · exportar · Power BI</span></div>
             </div>
             <button className="pl-btn pl-btn--secondary pl-btn--sm" onClick={() => setPanel("data")} style={{ gap: 7 }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M12 16V4M8 8l4-4 4 4" /><path d="M5 20h14" /></svg>Importar</button>
-            <button className="pl-btn pl-btn--secondary pl-btn--sm" onClick={() => showToast("Relatório Excel gerado (.xlsx)")} style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "#16a34a" }} /> Excel</button>
-            <button className="pl-btn pl-btn--secondary pl-btn--sm" onClick={() => showToast("Arquivo CSV exportado")} style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--pl-info)" }} /> CSV</button>
-            <button className="pl-btn pl-btn--secondary pl-btn--sm" onClick={() => showToast("PDF profissional gerado")} style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "#ef4444" }} /> PDF</button>
+            <button className="pl-btn pl-btn--secondary pl-btn--sm" onClick={() => exportReport("csv")} style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "#16a34a" }} /> Excel/CSV</button>
+            <button className="pl-btn pl-btn--secondary pl-btn--sm" onClick={() => exportReport("csv")} style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "var(--pl-info)" }} /> CSV</button>
+            <button className="pl-btn pl-btn--secondary pl-btn--sm" onClick={() => exportReport("pdf")} style={{ gap: 7 }}><span style={{ width: 8, height: 8, borderRadius: 2, background: "#ef4444" }} /> PDF</button>
             <button className="pl-btn pl-btn--primary pl-btn--sm" onClick={() => setPanel("data")} style={{ gap: 7 }}><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><rect x="3" y="3" width="8" height="8" rx="1" /><rect x="13" y="3" width="8" height="8" rx="1" /><rect x="3" y="13" width="8" height="8" rx="1" /><rect x="13" y="13" width="8" height="8" rx="1" /></svg>Power BI</button>
           </div>
 
