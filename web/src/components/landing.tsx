@@ -448,10 +448,14 @@ export function Landing() {
 
     const initScrub = () => {
       st = ScrollTrigger.create({
-        trigger: "#plf-video-section",
+        // Pin do PRÓPRIO bloco do vídeo (position:fixed) — não usar CSS sticky.
+        trigger: "#plf-video-sticky",
         start: "top top",
-        end: "bottom bottom",
-        scrub: 1.5,
+        end: "+=250%", // distância de scroll p/ percorrer o vídeo (~2,5 telas)
+        pin: true,
+        pinSpacing: true,
+        scrub: 1,
+        invalidateOnRefresh: true,
         onUpdate: (self) => {
           if (video && Number.isFinite(video.duration)) {
             video.currentTime = video.duration * self.progress;
@@ -460,6 +464,8 @@ export function Landing() {
           if (scrollHint) scrollHint.style.opacity = self.progress > 0.05 ? "0" : "1";
         },
       });
+      // Recalcula medidas após o layout assentar (evita gaps/posições erradas).
+      ScrollTrigger.refresh();
     };
 
     if (video) {
@@ -475,8 +481,14 @@ export function Landing() {
       }
     }
 
+    // Recalcula quando tudo (imagens/fontes) terminar de carregar.
+    const onLoad = () => ScrollTrigger.refresh();
+    if (!lowPower) window.addEventListener("load", onLoad);
+
     return () => {
       btn?.removeEventListener("click", toggle);
+      window.removeEventListener("load", onLoad);
+      video?.removeEventListener("loadedmetadata", initScrub);
       st?.kill();
     };
   }, []);

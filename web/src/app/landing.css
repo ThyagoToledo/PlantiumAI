@@ -108,14 +108,12 @@
   .plf-root .plf-team { grid-template-columns: 1fr !important; }
 }
 
-/* Video scrub section */
-#plf-video-section {
-  height: 300vh;
-  position: relative;
-}
+/* Video scrub section — o pin é feito pelo GSAP ScrollTrigger (position:fixed),
+   NÃO por CSS position:sticky. Motivo: o root da landing tem overflow-x:hidden,
+   e qualquer ancestral com overflow != visible QUEBRA o position:sticky (vídeo
+   cortado + vão preto). O pin do ScrollTrigger é imune a isso. */
+#plf-video-section { position: relative; }
 #plf-video-sticky {
-  position: sticky;
-  top: 0;
   height: 100vh;
   overflow: hidden;
   display: flex;
@@ -123,19 +121,14 @@
   justify-content: center;
 }
 
-/* prefers-reduced-motion: sem scroll-jacking, vídeo em loop em altura normal */
-#plf-video-section.plf-reduced { height: 100vh; }
-#plf-video-section.plf-reduced #plf-video-sticky { position: relative; }
+/* mobile/reduced-motion: sem pin — esconde dicas de scroll */
 #plf-video-section.plf-reduced #plf-scroll-hint,
 #plf-video-section.plf-reduced #plf-video-progress { display: none; }
-#plf-scroll-hint {
-  transition: opacity 0.4s ease;
-}
+#plf-scroll-hint { transition: opacity 0.4s ease; animation: plf-bounce 2s ease-in-out infinite; }
 @keyframes plf-bounce {
   0%, 100% { transform: translateX(-50%) translateY(0); }
   50% { transform: translateX(-50%) translateY(-8px); }
 }
-#plf-scroll-hint { animation: plf-bounce 2s ease-in-out infinite; }
 
 /* Nav PlantiumAI item hover */
 .plf-root .plf-tab-highlight:hover {
