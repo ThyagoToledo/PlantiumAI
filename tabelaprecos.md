@@ -69,6 +69,36 @@ Tudo do Cultivo, e adiciona a **arquitetura de evolução** (Seção 5):
 
 ---
 
+## Preços separados: equipamento, instalação e assinatura
+
+O investimento do produtor é apresentado em **três componentes distintos**, para deixar claro o que é
+gasto único e o que é mensal:
+
+| Componente | Tipo | Base de cálculo | Custo (R$) | Preço ao cliente (R$) | Margem (R$) |
+|---|---|---|---:|---:|---:|
+| Equipamento — kit básico | Único | Hardware (Anexo A) + 28% | 1.010,08 | **1.290,00** | 279,92 |
+| Equipamento — kit completo | Único | Hardware (Anexo A) + 28% | 1.705,22 | **2.190,00** | 484,78 |
+| Instalação e configuração | Único | 8 h × R$ 55,00/h | 440,00 | **590,00** | 150,00 |
+| Assinatura | Recorrente | ver planos acima | — | **89 / 179 / 349 /mês** | 64 / 119 / 169 |
+
+**Instalação** (Goiânia e região metropolitana): 8 h de mão de obra à taxa de R$ 55,00/h (a mesma do
+desenvolvimento) — montagem física, fixação de sensores/atuadores, calibração, configuração do app e
+teste da irrigação.
+
+### Adendo — deslocamento fora de Goiânia
+Acréscimo calculado por **D = 2 × d × c + p**, onde `d` = distância rodoviária (km) Goiânia→destino;
+`c` = R$ 1,30/km (combustível + desgaste + tempo); fator 2 = ida e volta; `p` = diária de R$ 180,00
+(alimentação/hospedagem), só quando houver pernoite.
+
+| Distância (ida) | Cálculo | Acréscimo |
+|---|---|---:|
+| Goiânia / RM | — | R$ 0,00 |
+| 120 km (sem pernoite) | 2 × 120 × 1,30 | R$ 312,00 |
+| 250 km (com pernoite) | 2 × 250 × 1,30 + 180 | R$ 830,00 |
+
+> A **assinatura é a principal fonte de renda** (recorrente); equipamento e instalação são receitas
+> únicas que aceleram o retorno do investimento.
+
 ## Notas de implementação (botão "Planos" na home)
 - Seção `#planos` na landing `web/` (Next.js + Tailwind), 3 cards responsivos (grid → coluna no mobile),
   card central "Cultivo" em destaque (`scale` + borda verde da paleta), toggle **Mensal/Anual** animado,

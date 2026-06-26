@@ -103,17 +103,29 @@ paga em **menos de 1,5 ano**, e antes disso em escala maior.
 
 ---
 
-## 7. Margem adicional no hardware (opcional)
+## 7. Receita única: equipamento + instalação
 
-O cliente paga o equipamento à parte. Aplicando margem comercial sobre o custo do kit (Anexo A):
+Além da assinatura recorrente, cada cliente gera **receita única** na venda do equipamento e na
+instalação. Não está contabilizada nos cenários da Seção 5 (que consideram só a assinatura), e **acelera
+o payback**.
 
-| Kit | Custo (Anexo A) | Preço sugerido | Margem unitária |
+| Componente | Custo (R$) | Preço (R$) | Margem (R$) |
 |---|---:|---:|---:|
-| Básico (protótipo funcional) | 1.010,08 | 1.290,00 | **279,92** |
-| Completo (com visão computacional) | 1.705,22 | 2.190,00 | **484,78** |
+| Equipamento — kit básico (Anexo A) | 1.010,08 | 1.290,00 | **279,92** |
+| Equipamento — kit completo (visão) | 1.705,22 | 2.190,00 | **484,78** |
+| Instalação (8 h × R$ 55,00/h) | 440,00 | 590,00 | **150,00** |
 
-Essa margem é **receita única** por venda, que acelera o payback acima e **não** está contabilizada
-nos cenários da Seção 5 (que consideram apenas a assinatura recorrente).
+**Receita única por cliente:** R$ 1.880,00 (kit básico + instalação) a R$ 2.780,00 (kit completo +
+instalação). **Margem única:** R$ 429,92 a R$ 634,78 por cliente.
+
+### Adendo — deslocamento fora de Goiânia
+**D = 2 × d × c + p** — `d` = km Goiânia→destino; `c` = R$ 1,30/km; fator 2 = ida/volta; `p` = diária
+R$ 180,00 (só com pernoite). Ex.: 120 km → +R$ 312,00; 250 km c/ pernoite → +R$ 830,00. Repassado
+integralmente ao cliente (custo neutro).
+
+> Combinando os dois fluxos, 30 assinaturas geram ~R$ 30 mil/ano recorrentes **mais** ~R$ 12,9 mil a
+> R$ 19 mil de margem única (30 × R$ 429,92 a R$ 634,78), reduzindo o payback do CapEx para bem menos de
+> um ano.
 
 ---
 
