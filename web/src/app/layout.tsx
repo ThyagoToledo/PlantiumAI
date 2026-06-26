@@ -14,12 +14,10 @@ export const viewport: Viewport = {
   themeColor: "#22c55e",
 };
 
-// Aplica o tema salvo antes da hidratação (evita flash de tema errado).
+// Aplica o tema escuro como padrão permanente.
 const themeScript = `
 (function(){try{
-  var t = localStorage.getItem('plantium-theme');
-  if(!t){ t = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark':'light'; }
-  document.documentElement.setAttribute('data-theme', t);
+  document.documentElement.setAttribute('data-theme', 'dark');
 }catch(e){}})();
 `;
 

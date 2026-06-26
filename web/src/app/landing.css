@@ -81,6 +81,8 @@
 .plf-root .plf-team-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-float); }
 .plf-root .plf-footer a:hover { color: var(--text-base); }
 .plf-root .plf-yt:hover { background: #cc0000 !important; transform: translateY(-1px); }
+.plf-root .plf-cta-git:hover { background: #000000 !important; transform: translateY(-1.5px); box-shadow: 0 10px 24px rgba(0,0,0,0.3) !important; }
+.plf-root .plf-cta-yt:hover { background: #cc0000 !important; transform: translateY(-1.5px); box-shadow: 0 10px 24px rgba(255,0,0,0.3) !important; }
 @media (max-width: 560px) { .plf-root .plf-yt-label { display: none; } }
 
 /* Alternância dos ícones sol/lua conforme o tema (padrão: escuro → mostra sol) */
@@ -99,7 +101,29 @@
   .plf-root .plf-kpis { grid-template-columns: repeat(2, 1fr) !important; }
   .plf-root .plf-team { grid-template-columns: repeat(2, 1fr) !important; }
   .plf-root .plf-footer { grid-template-columns: 1fr !important; }
-  .plf-root .plf-tabs { display: none !important; }
+  .plf-root .plf-tabs {
+    display: flex !important;
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    max-width: calc(100vw - 160px) !important;
+    scrollbar-width: none !important;
+    -ms-overflow-style: none !important;
+    gap: 2px !important;
+  }
+  .plf-root .plf-tabs::-webkit-scrollbar {
+    display: none !important;
+  }
+  .plf-root .plf-tabs a {
+    padding: 6px 10px !important;
+    font-size: 13px !important;
+    flex-shrink: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .plf-root .plf-nav-title {
+    display: none !important;
+  }
 }
 
 @media (max-width: 560px) {
@@ -114,6 +138,7 @@
    cortado + vão preto). O pin do ScrollTrigger é imune a isso. */
 #plf-video-section { position: relative; }
 #plf-video-sticky {
+  position: relative;
   height: 100vh;
   overflow: hidden;
   display: flex;

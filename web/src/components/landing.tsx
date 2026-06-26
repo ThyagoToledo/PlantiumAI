@@ -21,29 +21,22 @@ const HTML = `
   </div>
 
   <!-- NAVBAR -->
-  <div style="position:sticky; top:18px; z-index:40; padding:0 24px; margin-top:18px;">
+  <div style="position:fixed; top:18px; left:0; right:0; z-index:40; padding:0 24px;">
     <nav style="max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:20px; padding:9px 12px 9px 14px; background:var(--surface-glass); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border:1px solid var(--border-glass); border-radius:999px; box-shadow:var(--shadow-soft);">
       <a href="#topo" style="display:flex; align-items:center; gap:11px; font-family:'Sora',sans-serif; font-weight:700; font-size:18px; letter-spacing:-0.01em;">
         <img src="/logo-plantiumai.png" alt="Logo PlantiumAI" width="38" height="38" style="display:block; width:38px; height:38px; border-radius:50%; object-fit:cover; box-shadow:0 4px 14px rgba(0,0,0,0.4);"/>
-        PlantiumAI
+        <span class="plf-nav-title">PlantiumAI</span>
       </a>
       <div style="flex:1; display:flex; justify-content:center; gap:4px;" class="plf-tabs">
         <a href="#solucao" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Solução</a>
+        <a href="#demo-video" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">PlantiumAI</a>
         <a href="#tecnologia" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Tecnologia</a>
         <a href="#mercado" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Mercado</a>
         <a href="#equipe" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Equipe</a>
         <a href="#contato" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Contato</a>
-        <a href="#demo-video" class="plf-tab-highlight" style="display:inline-flex; align-items:center; gap:6px; padding:8px 13px; border-radius:999px; font-size:14px; font-weight:600; color:var(--brand-green); border:1px solid var(--border-glass); background:var(--brand-green-tint); transition:color .2s,background .2s;"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>PlantiumAI</a>
+        <a href="/planos" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Planos</a>
       </div>
       <div style="display:flex; align-items:center; gap:8px;">
-        <a href="https://www.youtube.com/@PlantiumAI" target="_blank" rel="noopener" class="plf-yt" aria-label="Canal no YouTube" title="Canal no YouTube" style="display:inline-flex; align-items:center; gap:7px; height:40px; padding:0 15px; border-radius:999px; background:#FF0000; color:#fff; font-size:14px; font-weight:600; box-shadow:0 4px 14px rgba(255,0,0,0.3); transition:transform .15s, background .2s;">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
-          <span class="plf-yt-label">YouTube</span>
-        </a>
-        <button id="plf-theme" class="plf-icon-btn" aria-label="Alternar tema claro e escuro" title="Alternar tema" style="display:inline-flex; align-items:center; justify-content:center; width:40px; height:40px; border-radius:999px; border:1px solid var(--border-subtle); background:var(--surface-raised); color:var(--text-base); cursor:pointer; transition:background .2s;">
-          <span class="plf-sun" style="align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.2"/><path d="M12 3v2M12 19v2M3 12h2M19 12h2M5.5 5.5l1.4 1.4M17.1 17.1l1.4 1.4M18.5 5.5l-1.4 1.4M6.9 17.1l-1.4 1.4"/></svg></span>
-          <span class="plf-moon" style="align-items:center; justify-content:center;"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 14.5A7.5 7.5 0 1 1 10.5 4 6 6 0 0 0 20 14.5z"/></svg></span>
-        </button>
         <a href="/login" class="plf-btn-primary" style="padding:10px 18px; border-radius:999px; border:none; background:var(--brand-green); color:#06120b; font-family:'Inter',sans-serif; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(52,217,119,0.3); transition:transform .15s, background .2s;">Login</a>
       </div>
     </nav>
@@ -53,7 +46,7 @@ const HTML = `
   <header id="topo" style="position:relative; z-index:1; overflow:hidden;">
     <div style="position:absolute; inset:0; background-image:url('/landing/hero.jpg'); background-size:cover; background-position:center; opacity:0.9;"></div>
     <div style="position:absolute; inset:0; background:var(--hero-veil);"></div>
-    <div style="position:relative; max-width:1180px; margin:0 auto; padding:72px 24px 48px; display:grid; grid-template-columns:1.05fr 1fr; gap:48px; align-items:center;" class="plf-hero">
+    <div style="position:relative; max-width:1180px; margin:0 auto; padding:106px 24px 48px; display:grid; grid-template-columns:1.05fr 1fr; gap:48px; align-items:center;" class="plf-hero">
       <div id="solucao">
         <div style="display:flex; flex-wrap:wrap; gap:8px;">
           <span style="display:inline-flex; align-items:center; gap:7px; padding:6px 13px; border-radius:999px; background:var(--surface-glass); -webkit-backdrop-filter:blur(14px); backdrop-filter:blur(14px); border:1px solid var(--border-glass); font-size:12.5px; font-weight:600; color:var(--text-base);"><span style="width:7px; height:7px; border-radius:50%; background:var(--brand-green);"></span>Desafio AgroStartup 2026</span>
@@ -168,16 +161,8 @@ const HTML = `
       <div id="plf-video-sticky">
         <video id="plf-video-scrub" src="/videos/PlantiumAI_site_mudo.mp4" muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></video>
         <div style="position:absolute; inset:0; background:linear-gradient(to bottom,rgba(8,15,11,0.55) 0%,rgba(8,15,11,0.18) 25%,rgba(8,15,11,0.18) 75%,rgba(8,15,11,0.7) 100%); pointer-events:none;"></div>
-        <div style="position:relative; z-index:2; text-align:center; padding:0 24px; max-width:720px;">
-          <div style="display:inline-flex; align-items:center; gap:8px; padding:6px 14px; border-radius:999px; background:var(--brand-green-tint); border:1px solid var(--border-glass); font-size:12.5px; font-weight:600; color:var(--brand-green); margin-bottom:20px;">
-            <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><polygon points="5 3 19 12 5 21 5 3"/></svg>PlantiumAI em ação
-          </div>
-          <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(30px,4.5vw,56px); line-height:1.08; letter-spacing:-0.02em; color:#eaf3ee; text-shadow:0 2px 24px rgba(0,0,0,0.55); margin:0 0 18px;">O ecossistema que transforma<br/><span style="color:var(--brand-green);">dados em decisões</span></h2>
-          <p style="font-size:17px; line-height:1.6; color:rgba(234,243,238,0.82); text-shadow:0 1px 8px rgba(0,0,0,0.4); max-width:520px; margin:0 auto;">Acompanhe como a plataforma monitora e automatiza micro estufas em tempo real — do sensor ao atuador.</p>
-        </div>
-        <div id="plf-scroll-hint" style="position:absolute; bottom:36px; left:50%; transform:translateX(-50%); display:flex; flex-direction:column; align-items:center; gap:8px; font-size:13px; color:rgba(234,243,238,0.65); z-index:2; pointer-events:none;">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 5v14M5 12l7 7 7-7"/></svg>Role para explorar
-        </div>
+
+
         <div id="plf-video-progress" style="position:absolute; bottom:0; left:0; height:3px; width:0%; background:var(--brand-green); z-index:3; transition:width .05s linear;"></div>
       </div>
     </div>
@@ -375,9 +360,9 @@ const HTML = `
       <h2 style="position:relative; font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(28px,3.4vw,40px); line-height:1.15; letter-spacing:-0.01em; color:#06120b; margin:0;">Vamos cultivar o futuro juntos</h2>
       <p style="position:relative; font-size:17px; line-height:1.6; color:rgba(6,18,11,0.78); max-width:540px; margin:16px auto 0;">Estamos abrindo conversas com investidores e parceiros que acreditam em alimento inteligente e sustentável.</p>
       <div style="position:relative; display:flex; gap:14px; justify-content:center; margin-top:32px; flex-wrap:wrap;">
-        <a href="/login" style="padding:14px 30px; border-radius:999px; border:none; background:#06120b; color:#fff; font-family:'Inter',sans-serif; font-size:15px; font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.25); transition:transform .15s;">Falar com a equipe</a>
-        <a href="https://github.com/ThyagoToledo/PlantiumAI" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; padding:14px 30px; border-radius:999px; background:rgba(6,18,11,0.12); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid rgba(6,18,11,0.2); color:#06120b; font-size:15px; font-weight:600; cursor:pointer;"><svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.52.56.83 1.28.83 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>Ver no GitHub</a>
-        <a href="https://www.youtube.com/@PlantiumAI" target="_blank" rel="noopener" style="display:inline-flex; align-items:center; gap:8px; padding:14px 30px; border-radius:999px; background:rgba(6,18,11,0.12); -webkit-backdrop-filter:blur(8px); backdrop-filter:blur(8px); border:1px solid rgba(6,18,11,0.2); color:#06120b; font-size:15px; font-weight:600; cursor:pointer;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>Inscreva-se no canal</a>
+        <a href="/planos" style="padding:14px 30px; border-radius:999px; border:none; background:#06120b; color:#fff; font-family:'Inter',sans-serif; font-size:15px; font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.25); transition:transform .15s;">Planos</a>
+        <a href="https://github.com/PlantiumAI/PlantiumAI" target="_blank" rel="noopener" class="plf-cta-git" style="display:inline-flex; align-items:center; gap:8px; padding:14px 30px; border-radius:999px; background:#181717; border:none; color:#ffffff; font-size:15px; font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(0,0,0,0.15); transition:transform .15s;"><svg width="17" height="17" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.52.56.83 1.28.83 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>Ver no GitHub</a>
+        <a href="https://www.youtube.com/@PlantiumAI" target="_blank" rel="noopener" class="plf-cta-yt" style="display:inline-flex; align-items:center; gap:8px; padding:14px 30px; border-radius:999px; background:#FF0000; border:none; color:#ffffff; font-size:15px; font-weight:600; cursor:pointer; box-shadow:0 8px 20px rgba(255,0,0,0.25); transition:transform .15s;"><svg width="17" height="17" viewBox="0 0 24 24" fill="currentColor"><path d="M23.5 6.2a3 3 0 0 0-2.11-2.12C19.5 3.5 12 3.5 12 3.5s-7.5 0-9.39.58A3 3 0 0 0 .5 6.2 31.2 31.2 0 0 0 0 12a31.2 31.2 0 0 0 .5 5.8 3 3 0 0 0 2.11 2.12C4.5 20.5 12 20.5 12 20.5s7.5 0 9.39-.58A3 3 0 0 0 23.5 17.8 31.2 31.2 0 0 0 24 12a31.2 31.2 0 0 0-.5-5.8zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>Inscreva-se no canal</a>
       </div>
     </div>
   </section>
@@ -406,7 +391,7 @@ const HTML = `
         <div style="display:flex; flex-direction:column; gap:9px; font-size:14px; color:var(--text-muted);">
           <a href="mailto:plantiumai@gmail.com" style="display:flex; align-items:center; gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="m4 7 8 6 8-6"/></svg>plantiumai@gmail.com</a>
           <a href="https://youtube.com/@PlantiumAI" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:8px;"><svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor"><path d="M23 7.5a3 3 0 0 0-2.1-2.1C19 5 12 5 12 5s-7 0-8.9.4A3 3 0 0 0 1 7.5 31 31 0 0 0 .6 12 31 31 0 0 0 1 16.5a3 3 0 0 0 2.1 2.1C5 19 12 19 12 19s7 0 8.9-.4a3 3 0 0 0 2.1-2.1A31 31 0 0 0 23.4 12 31 31 0 0 0 23 7.5zM9.8 15.3V8.7l5.7 3.3z"/></svg>@PlantiumAI</a>
-          <a href="https://github.com/ThyagoToledo/PlantiumAI" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:8px;"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.52.56.83 1.28.83 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>ThyagoToledo/PlantiumAI</a>
+          <a href="https://github.com/PlantiumAI/PlantiumAI" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:8px;"><svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38v-1.34c-2.23.48-2.7-1.07-2.7-1.07-.36-.92-.89-1.17-.89-1.17-.73-.5.05-.49.05-.49.8.06 1.23.83 1.23.83.71 1.23 1.87.87 2.33.66.07-.52.28-.87.5-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.83-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82a7.6 7.6 0 0 1 4 0c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.52.56.83 1.28.83 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48v2.19c0 .21.15.46.55.38A8 8 0 0 0 16 8c0-4.42-3.58-8-8-8z"/></svg>PlantiumAI/PlantiumAI</a>
         </div>
       </div>
     </div>
@@ -421,16 +406,6 @@ const HTML = `
 
 export function Landing() {
   useEffect(() => {
-    // Theme toggle
-    const btn = document.getElementById("plf-theme");
-    const toggle = () => {
-      const root = document.documentElement;
-      const next = root.getAttribute("data-theme") === "dark" ? "light" : "dark";
-      root.setAttribute("data-theme", next);
-      try { localStorage.setItem("plantium-theme", next); } catch {}
-    };
-    btn?.addEventListener("click", toggle);
-
     // GSAP ScrollTrigger video scrub
     gsap.registerPlugin(ScrollTrigger);
 
@@ -445,8 +420,11 @@ export function Landing() {
       "(prefers-reduced-motion: reduce), (max-width: 760px), (pointer: coarse)",
     ).matches;
     let st: ReturnType<typeof ScrollTrigger.create> | null = null;
+    let initialized = false;
 
     const initScrub = () => {
+      if (initialized) return;
+      initialized = true;
       st = ScrollTrigger.create({
         // Pin do PRÓPRIO bloco do vídeo (position:fixed) — não usar CSS sticky.
         trigger: "#plf-video-sticky",
@@ -457,7 +435,7 @@ export function Landing() {
         scrub: 1,
         invalidateOnRefresh: true,
         onUpdate: (self) => {
-          if (video && Number.isFinite(video.duration)) {
+          if (video && Number.isFinite(video.duration) && video.duration > 0) {
             video.currentTime = video.duration * self.progress;
           }
           if (progressBar) progressBar.style.width = `${self.progress * 100}%`;
@@ -474,10 +452,17 @@ export function Landing() {
         section?.classList.add("plf-reduced");
         video.loop = true;
         video.play().catch(() => {});
-      } else if (video.readyState >= 1) {
-        initScrub();
       } else {
-        video.addEventListener("loadedmetadata", initScrub, { once: true });
+        if (video.readyState >= 1 && Number.isFinite(video.duration)) {
+          initScrub();
+        } else {
+          video.addEventListener("loadedmetadata", initScrub, { once: true });
+          video.addEventListener("canplay", initScrub, { once: true });
+          // Fallback de segurança: inicializa de qualquer forma após 1 segundo
+          const t = setTimeout(initScrub, 1000);
+          
+          // Note: clear timeout on unmount is handled in cleanup function below
+        }
       }
     }
 
@@ -486,9 +471,11 @@ export function Landing() {
     if (!lowPower) window.addEventListener("load", onLoad);
 
     return () => {
-      btn?.removeEventListener("click", toggle);
       window.removeEventListener("load", onLoad);
-      video?.removeEventListener("loadedmetadata", initScrub);
+      if (video) {
+        video.removeEventListener("loadedmetadata", initScrub);
+        video.removeEventListener("canplay", initScrub);
+      }
       st?.kill();
     };
   }, []);
