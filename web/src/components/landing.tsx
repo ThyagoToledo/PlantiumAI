@@ -21,12 +21,14 @@ const HTML = `
   </div>
 
   <!-- NAVBAR -->
-  <div style="position:fixed; top:18px; left:0; right:0; z-index:40; padding:0 24px;">
-    <nav style="max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:20px; padding:9px 12px 9px 14px; background:var(--surface-glass); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border:1px solid var(--border-glass); border-radius:999px; box-shadow:var(--shadow-soft);">
+  <div style="position:fixed; top:18px; left:0; right:0; z-index:40; padding:0 16px;">
+    <nav class="plf-nav" style="position:relative; max-width:1180px; margin:0 auto; display:flex; align-items:center; gap:20px; padding:9px 12px 9px 14px; background:var(--surface-glass); -webkit-backdrop-filter:blur(18px); backdrop-filter:blur(18px); border:1px solid var(--border-glass); border-radius:999px; box-shadow:var(--shadow-soft);">
       <a href="#topo" style="display:flex; align-items:center; gap:11px; font-family:'Sora',sans-serif; font-weight:700; font-size:18px; letter-spacing:-0.01em;">
         <img src="/logo-plantiumai.png" alt="Logo PlantiumAI" width="38" height="38" style="display:block; width:38px; height:38px; border-radius:50%; object-fit:cover; box-shadow:0 4px 14px rgba(0,0,0,0.4);"/>
         <span class="plf-nav-title">PlantiumAI</span>
       </a>
+      <!-- Toggle do menu mobile: CSS puro (checkbox hack), funciona sem JS -->
+      <input type="checkbox" id="plf-nav-toggle" class="plf-nav-toggle" aria-hidden="true" tabindex="-1">
       <div style="flex:1; display:flex; justify-content:center; gap:4px;" class="plf-tabs">
         <a href="#solucao" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Solução</a>
         <a href="#demo-video" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">PlantiumAI</a>
@@ -36,8 +38,25 @@ const HTML = `
         <a href="#contato" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Contato</a>
         <a href="/planos" style="padding:8px 13px; border-radius:999px; font-size:14px; font-weight:500; color:var(--text-muted); transition:color .2s,background .2s;">Planos</a>
       </div>
-      <div style="display:flex; align-items:center; gap:8px;">
-        <a href="/login" class="plf-btn-primary" style="padding:10px 18px; border-radius:999px; border:none; background:var(--brand-green); color:#06120b; font-family:'Inter',sans-serif; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(52,217,119,0.3); transition:transform .15s, background .2s;">Login</a>
+      <div class="plf-nav-right" style="display:flex; align-items:center; gap:8px;">
+        <a href="/login" class="plf-btn-primary plf-login-btn" style="padding:10px 18px; border-radius:999px; border:none; background:var(--brand-green); color:#06120b; font-family:'Inter',sans-serif; font-size:14px; font-weight:600; cursor:pointer; box-shadow:0 4px 14px rgba(52,217,119,0.3); transition:transform .15s, background .2s;">Login</a>
+        <label for="plf-nav-toggle" class="plf-hamburger" role="button" aria-label="Abrir menu" tabindex="0">
+          <svg class="plf-burger-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+          <svg class="plf-burger-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+        </label>
+      </div>
+      <!-- Backdrop p/ fechar tocando fora (label do mesmo checkbox) -->
+      <label for="plf-nav-toggle" class="plf-nav-backdrop" aria-hidden="true"></label>
+      <!-- Menu mobile (hambúrguer) -->
+      <div id="plf-mobile-menu" class="plf-mobile-menu">
+        <a href="#solucao">Solução</a>
+        <a href="#demo-video">PlantiumAI</a>
+        <a href="#tecnologia">Tecnologia</a>
+        <a href="#mercado">Mercado</a>
+        <a href="#equipe">Equipe</a>
+        <a href="#contato">Contato</a>
+        <a href="/planos">Planos</a>
+        <a href="/login" class="plf-mm-login">Entrar no painel</a>
       </div>
     </nav>
   </div>
@@ -159,7 +178,7 @@ const HTML = `
   <section id="demo-video" style="position:relative; z-index:1;">
     <div id="plf-video-section">
       <div id="plf-video-sticky">
-        <video id="plf-video-scrub" src="/videos/PlantiumAI_site_mudo.mp4" muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></video>
+        <video id="plf-video-scrub" src="/videos/PlantiumAI_site_mudo.mp4" poster="/landing/hero.jpg" muted playsinline preload="auto" style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover;"></video>
         <div style="position:absolute; inset:0; background:linear-gradient(to bottom,rgba(8,15,11,0.55) 0%,rgba(8,15,11,0.18) 25%,rgba(8,15,11,0.18) 75%,rgba(8,15,11,0.7) 100%); pointer-events:none;"></div>
 
 
@@ -406,6 +425,67 @@ const HTML = `
 
 export function Landing() {
   useEffect(() => {
+    // ---- Menu mobile: fechar ao clicar num link (enhancement do checkbox) ----
+    const navToggle = document.getElementById(
+      "plf-nav-toggle",
+    ) as HTMLInputElement | null;
+    const menu = document.getElementById("plf-mobile-menu");
+    const closeMenu = () => {
+      if (navToggle) navToggle.checked = false;
+    };
+    menu?.querySelectorAll("a").forEach((a) =>
+      a.addEventListener("click", closeMenu),
+    );
+
+    // ---- Scroll reveal (animações que valorizam a marca) ----
+    const prefersReduced = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    let io: IntersectionObserver | null = null;
+    if (!prefersReduced && "IntersectionObserver" in window) {
+      io = new IntersectionObserver(
+        (entries) => {
+          entries.forEach((entry) => {
+            if (entry.isIntersecting) {
+              entry.target.classList.add("plf-in");
+              io?.unobserve(entry.target);
+            }
+          });
+        },
+        { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      );
+      // Já visível na viewport? Revela no MESMO tick (sem flash visível→some).
+      const inView = (el: HTMLElement) => {
+        const r = el.getBoundingClientRect();
+        return r.top < window.innerHeight * 0.9 && r.bottom > 0;
+      };
+      // Grids de cards: classe aplicada via JS (sem JS, conteúdo permanece
+      // visível). Filhos animam em cascata via CSS nth-child.
+      document
+        .querySelectorAll<HTMLElement>(
+          ".plf-root .plf-flow, .plf-root .plf-pillars, .plf-root .plf-team",
+        )
+        .forEach((g) => {
+          g.classList.add("plf-stagger");
+          if (inView(g)) g.classList.add("plf-in");
+          else io?.observe(g);
+        });
+      // Blocos principais sobem com fade; cascata entre irmãos do mesmo grupo.
+      const blocks = document.querySelectorAll<HTMLElement>(
+        ".plf-root section > div:not(#plf-video-section):not(.plf-stagger), .plf-root #solucao, .plf-root .plf-preview, .plf-root .plf-footer > div",
+      );
+      blocks.forEach((el) => {
+        el.classList.add("plf-reveal");
+        const sibs = Array.from(el.parentElement?.children ?? []).filter((c) =>
+          c.classList.contains("plf-reveal"),
+        );
+        const i = sibs.indexOf(el);
+        el.style.transitionDelay = `${Math.min(i, 5) * 80}ms`;
+        if (inView(el)) el.classList.add("plf-in");
+        else io?.observe(el);
+      });
+    }
+
     // GSAP ScrollTrigger video scrub
     gsap.registerPlugin(ScrollTrigger);
 
@@ -476,6 +556,10 @@ export function Landing() {
         video.removeEventListener("loadedmetadata", initScrub);
         video.removeEventListener("canplay", initScrub);
       }
+      menu?.querySelectorAll("a").forEach((a) =>
+        a.removeEventListener("click", closeMenu),
+      );
+      io?.disconnect();
       st?.kill();
     };
   }, []);

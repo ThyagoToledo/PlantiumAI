@@ -101,28 +101,115 @@
   .plf-root .plf-kpis { grid-template-columns: repeat(2, 1fr) !important; }
   .plf-root .plf-team { grid-template-columns: repeat(2, 1fr) !important; }
   .plf-root .plf-footer { grid-template-columns: 1fr !important; }
-  .plf-root .plf-tabs {
-    display: flex !important;
-    overflow-x: auto !important;
-    white-space: nowrap !important;
-    max-width: calc(100vw - 160px) !important;
-    scrollbar-width: none !important;
-    -ms-overflow-style: none !important;
-    gap: 2px !important;
-  }
-  .plf-root .plf-tabs::-webkit-scrollbar {
-    display: none !important;
-  }
-  .plf-root .plf-tabs a {
-    padding: 6px 10px !important;
-    font-size: 13px !important;
-    flex-shrink: 0 !important;
-  }
 }
 
-@media (max-width: 768px) {
-  .plf-root .plf-nav-title {
-    display: none !important;
+/* ---- Navbar mobile: hambúrguer com CSS puro (checkbox hack, sem JS) ---- */
+.plf-root .plf-nav-toggle {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  margin: 0;
+}
+.plf-root .plf-hamburger { display: none; }
+.plf-root .plf-mobile-menu { display: none; }
+.plf-root .plf-nav-backdrop { display: none; }
+
+@media (max-width: 860px) {
+  /* Esconde as abas inline e o botão Login compacto; mostra o hambúrguer. */
+  .plf-root .plf-tabs { display: none !important; }
+  .plf-root .plf-login-btn { display: none !important; }
+  .plf-root .plf-desktop-only { display: none !important; }
+  .plf-root .plf-nav-title { display: inline !important; }
+  .plf-root nav.plf-nav { gap: 12px !important; }
+
+  .plf-root .plf-hamburger {
+    display: inline-flex !important;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 14px;
+    background: var(--surface-raised);
+    border: 1px solid var(--border-glass);
+    color: var(--text-base);
+    cursor: pointer;
+    flex: none;
+    transition: background 0.2s, transform 0.15s;
+  }
+  .plf-root .plf-hamburger:active { transform: scale(0.94); }
+  .plf-root .plf-hamburger .plf-burger-close { display: none; }
+  /* Backdrop para fechar tocando fora */
+  .plf-root .plf-nav-toggle:checked ~ .plf-nav-backdrop {
+    display: block;
+    position: fixed;
+    inset: 0;
+    z-index: 1;
+    cursor: default;
+  }
+
+  .plf-root .plf-mobile-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    position: absolute;
+    z-index: 2;
+    top: calc(100% + 10px);
+    left: 0;
+    right: 0;
+    padding: 10px;
+    border-radius: 22px;
+    background: var(--surface-glass);
+    -webkit-backdrop-filter: blur(22px);
+    backdrop-filter: blur(22px);
+    border: 1px solid var(--border-glass);
+    box-shadow: var(--shadow-float);
+    opacity: 0;
+    transform: translateY(-10px) scale(0.98);
+    transform-origin: top right;
+    pointer-events: none;
+    transition: opacity 0.24s cubic-bezier(0.16, 1, 0.3, 1),
+      transform 0.24s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+  /* Aberto: checkbox marcado */
+  .plf-root .plf-nav-toggle:checked ~ .plf-mobile-menu {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+  }
+  /* Troca dos ícones aberto/fechar */
+  .plf-root .plf-nav-toggle:checked ~ .plf-nav-right .plf-hamburger .plf-burger-open {
+    display: none;
+  }
+  .plf-root .plf-nav-toggle:checked ~ .plf-nav-right .plf-hamburger .plf-burger-close {
+    display: inline-flex;
+  }
+
+  .plf-root .plf-mobile-menu a {
+    padding: 13px 15px;
+    border-radius: 14px;
+    font-size: 15.5px;
+    font-weight: 600;
+    color: var(--text-muted);
+    transition: background 0.2s, color 0.2s;
+  }
+  .plf-root .plf-mobile-menu a:hover,
+  .plf-root .plf-mobile-menu a:active {
+    background: var(--surface-raised);
+    color: var(--text-base);
+  }
+  .plf-root .plf-mobile-menu .plf-mm-login {
+    margin-top: 6px;
+    background: var(--brand-green);
+    color: #06120b;
+    text-align: center;
+    box-shadow: 0 4px 14px rgba(52, 217, 119, 0.3);
+  }
+  .plf-root .plf-mobile-menu .plf-mm-login:hover,
+  .plf-root .plf-mobile-menu .plf-mm-login:active {
+    background: var(--brand-green-deep);
+    color: #06120b;
   }
 }
 
@@ -144,6 +231,53 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  /* Fallback: nunca um vão preto se o vídeo demorar/não tocar. */
+  background: #080f0b url("/landing/hero.jpg") center / cover no-repeat;
+}
+
+/* Mobile: sem scroll-jacking, altura menor — evita a "tela preta" de 100vh. */
+@media (max-width: 760px) {
+  #plf-video-sticky {
+    height: 62vh;
+  }
+}
+
+/* ---- Animações de entrada (scroll reveal) ---- */
+.plf-root .plf-reveal {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.plf-root .plf-reveal.plf-in {
+  opacity: 1;
+  transform: none;
+}
+.plf-root .plf-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.plf-root .plf-stagger.plf-in > * {
+  opacity: 1;
+  transform: none;
+}
+.plf-root .plf-stagger.plf-in > *:nth-child(1) { transition-delay: 0.04s; }
+.plf-root .plf-stagger.plf-in > *:nth-child(2) { transition-delay: 0.12s; }
+.plf-root .plf-stagger.plf-in > *:nth-child(3) { transition-delay: 0.2s; }
+.plf-root .plf-stagger.plf-in > *:nth-child(4) { transition-delay: 0.28s; }
+.plf-root .plf-stagger.plf-in > *:nth-child(5) { transition-delay: 0.36s; }
+.plf-root .plf-stagger.plf-in > *:nth-child(n + 6) { transition-delay: 0.44s; }
+
+@media (prefers-reduced-motion: reduce) {
+  .plf-root .plf-reveal,
+  .plf-root .plf-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+  }
 }
 
 /* mobile/reduced-motion: sem pin — esconde dicas de scroll */

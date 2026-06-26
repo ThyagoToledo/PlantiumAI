@@ -253,7 +253,7 @@ export default function PlanosPage() {
 
       {/* Header */}
       <header className="fixed top-[18px] left-0 right-0 z-40 max-w-[1180px] mx-auto px-6">
-        <nav className="flex items-center justify-between gap-4 px-6 py-3 rounded-full bg-[#14261c]/55 border border-[#78c896]/14 backdrop-blur-xl shadow-lg">
+        <nav className="relative flex items-center justify-between gap-4 px-6 py-3 rounded-full bg-[#14261c]/55 border border-[#78c896]/14 backdrop-blur-xl shadow-lg">
           <Link href="/#topo" className="flex items-center gap-3 font-semibold text-lg tracking-tight font-display text-[#eaf3ee] hover:opacity-90 transition">
             <img
               src="/logo-plantiumai.png"
@@ -264,6 +264,9 @@ export default function PlanosPage() {
             />
             <span className="plf-nav-title">PlantiumAI</span>
           </Link>
+
+          {/* Toggle do menu mobile: CSS puro (checkbox hack), funciona sem JS */}
+          <input type="checkbox" id="plf-nav-toggle" className="plf-nav-toggle" aria-hidden tabIndex={-1} />
 
           {/* Navegacao Centralizada (Abas) */}
           <div className="flex-1 flex justify-center gap-1 plf-tabs">
@@ -276,20 +279,39 @@ export default function PlanosPage() {
             <Link href="/planos" className="px-3 py-2 rounded-full text-xs font-semibold text-[#eaf3ee] bg-[#16281e]/80 border border-emerald-500/10 transition-colors">Planos</Link>
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="plf-nav-right flex items-center gap-4">
             <Link
               href="/#topo"
-              className="flex items-center gap-1.5 text-xs font-semibold text-[#9fb4a8] hover:text-emerald-400 transition"
+              className="plf-desktop-only flex items-center gap-1.5 text-xs font-semibold text-[#9fb4a8] hover:text-emerald-400 transition"
             >
               <ArrowLeft className="w-3.5 h-3.5" />
               Início
             </Link>
             <Link
               href="/login"
-              className="px-4 py-2 rounded-full bg-[#22c55e] text-[#06120b] text-xs font-bold hover:bg-[#16a34a] transition-all shadow-[0_4px_14px_rgba(52,217,119,0.3)] hover:scale-[1.02]"
+              className="plf-login-btn px-4 py-2 rounded-full bg-[#22c55e] text-[#06120b] text-xs font-bold hover:bg-[#16a34a] transition-all shadow-[0_4px_14px_rgba(52,217,119,0.3)] hover:scale-[1.02]"
             >
               Login
             </Link>
+            <label htmlFor="plf-nav-toggle" className="plf-hamburger" role="button" aria-label="Abrir menu" tabIndex={0}>
+              <svg className="plf-burger-open" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M3 6h18M3 12h18M3 18h18"/></svg>
+              <svg className="plf-burger-close" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round"><path d="M6 6l12 12M18 6 6 18"/></svg>
+            </label>
+          </div>
+
+          {/* Backdrop p/ fechar tocando fora */}
+          <label htmlFor="plf-nav-toggle" className="plf-nav-backdrop" aria-hidden></label>
+
+          {/* Menu mobile (hambúrguer) */}
+          <div id="plf-mobile-menu" className="plf-mobile-menu">
+            <Link href="/#solucao">Solução</Link>
+            <Link href="/#demo-video">PlantiumAI</Link>
+            <Link href="/#tecnologia">Tecnologia</Link>
+            <Link href="/#mercado">Mercado</Link>
+            <Link href="/#equipe">Equipe</Link>
+            <Link href="/#contato">Contato</Link>
+            <Link href="/planos">Planos</Link>
+            <Link href="/login" className="plf-mm-login">Entrar no painel</Link>
           </div>
         </nav>
       </header>
