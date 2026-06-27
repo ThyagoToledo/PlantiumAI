@@ -3,5 +3,9 @@
   "identifier": "default",
   "description": "Capacidades padrão da janela principal",
   "windows": ["main"],
-  "permissions": ["core:default"]
+  "permissions": [
+    "core:default",
+    "notification:default",
+    "dialog:default"
+  ]
 }

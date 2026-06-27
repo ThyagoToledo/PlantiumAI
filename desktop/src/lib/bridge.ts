@@ -30,6 +30,15 @@ class BrowserBackend {
     ideal_moisture_min: 35,
     ideal_moisture_max: 65,
   };
+  private profiles = [
+    { id: 1, name: "Planta", ideal_moisture_min: 35, ideal_moisture_max: 65, is_active: true }
+  ];
+  private settings = new Map<string, string>([
+    ["notifications_enabled", "true"],
+    ["auto_irrigate", "false"],
+    ["auto_cooldown_mins", "30"]
+  ]);
+  private irrigationLogs: Array<{ id: number; ts: number; duration_s: number; trigger_type: string }> = [];
 
   emit(event: string, payload: unknown) {
     this.listeners.get(event)?.forEach((cb) => cb(payload));
@@ -91,13 +100,96 @@ class BrowserBackend {
       }
       case "get_profile":
         return this.profile;
-      case "set_profile":
+      case "set_profile": {
+        const name = args?.name as string;
+        const idealMin = args?.idealMin as number;
+        const idealMax = args?.idealMax as number;
         this.profile = {
+          name,
+          ideal_moisture_min: idealMin,
+          ideal_moisture_max: idealMax,
+        };
+        const active = this.profiles.find((p) => p.is_active);
+        if (active) {
+          active.name = name;
+          active.ideal_moisture_min = idealMin;
+          active.ideal_moisture_max = idealMax;
+        }
+        return null;
+      }
+      case "list_profiles":
+        return this.profiles;
+      case "add_profile": {
+        const newId = this.profiles.length > 0 ? Math.max(...this.profiles.map((p) => p.id)) + 1 : 1;
+        this.profiles.push({
+          id: newId,
           name: args?.name as string,
           ideal_moisture_min: args?.idealMin as number,
           ideal_moisture_max: args?.idealMax as number,
-        };
+          is_active: false,
+        });
+        return newId;
+      }
+      case "delete_profile": {
+        const id = args?.id as number;
+        this.profiles = this.profiles.filter((p) => p.id !== id);
         return null;
+      }
+      case "activate_profile": {
+        const id = args?.id as number;
+        this.profiles.forEach((p) => (p.is_active = p.id === id));
+        const active = this.profiles.find((p) => p.is_active);
+        if (active) {
+          this.profile = {
+            name: active.name,
+            ideal_moisture_min: active.ideal_moisture_min,
+            ideal_moisture_max: active.ideal_moisture_max,
+          };
+        }
+        return null;
+      }
+      case "trigger_irrigation": {
+        const duration = (args?.durationS as number) || 30;
+        this.irrigationLogs.unshift({
+          id: Math.floor(Math.random() * 10000),
+          ts: Date.now(),
+          duration_s: duration,
+          trigger_type: "manual",
+        });
+        return null;
+      }
+      case "export_history_csv": {
+        const headers = "ts,soil_moisture,air_temperature,air_humidity,light_level,soil_temperature,co2_level,ph_level,source\n";
+        const rows = this.history
+          .map((e) => {
+            const r = e.reading;
+            return `${r.ts},${r.soil_moisture},${r.air_temperature},${r.air_humidity},${r.light_level},${r.soil_temperature},${r.co2_level},${r.ph_level},${r.source}`;
+          })
+          .join("\n");
+        const blob = new Blob([headers + rows], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "historico_plantium_simulado.csv";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        return "historico_plantium_simulado.csv";
+      }
+      case "get_system_health":
+        return {
+          db_size_mb: 1.2,
+          reading_count: this.history.length,
+          last_ts: this.last?.ts ?? null,
+          drivers_ok: true,
+        };
+      case "save_setting":
+        this.settings.set(args?.key as string, args?.value as string);
+        return null;
+      case "load_setting":
+        return this.settings.get(args?.key as string) ?? null;
+      case "get_irrigation_logs":
+        return this.irrigationLogs.slice(0, (args?.limit as number) ?? 50);
       case "deps_manifest": {
         const os = args?.os as string;
         const all: DepItem[] = [

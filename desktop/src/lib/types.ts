@@ -84,3 +84,26 @@ export interface HistoryRow {
   ph_level: number | null;
   source: string;
 }
+
+export interface PlantProfileRow {
+  id: number;
+  name: string;
+  ideal_moisture_min: number;
+  ideal_moisture_max: number;
+  is_active: boolean;
+}
+
+export interface IrrigationLogRow {
+  id: number;
+  ts: number;
+  duration_s: number;
+  trigger_type: string;
+}
+
+export interface SystemHealth {
+  db_size_mb: number;
+  reading_count: number;
+  last_ts: number | null;
+  drivers_ok: boolean;
+}
+

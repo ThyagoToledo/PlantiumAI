@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useMemo, useState, useEffect } from "react";
 import {
   Droplets,
   Thermometer,
@@ -7,12 +7,11 @@ import {
   Leaf,
   FlaskConical,
   CloudFog,
-  ShowerHead,
   AlertTriangle,
 } from "lucide-react";
 import StatCard from "../components/StatCard";
 import LiveChart, { type Series } from "../components/LiveChart";
-import { invoke } from "../lib/bridge";
+import { invoke, listen } from "../lib/bridge";
 import type { Alert, IrrigationDecision, ReadingEvent } from "../lib/types";
 
 const MOISTURE_LABEL: Record<string, string> = {
@@ -37,8 +36,41 @@ export default function Dashboard({ events, latest, alerts }: Props) {
   const [decision, setDecision] = useState<IrrigationDecision | null>(null);
   const [decisionError, setDecisionError] = useState("");
 
+  // Estados de irrigacao
+  const [showIrrigateModal, setShowIrrigateModal] = useState(false);
+  const [irrigating, setIrrigating] = useState(false);
+  const [timeLeft, setTimeLeft] = useState(0);
+
   const r = latest?.reading;
   const moistureClass = latest?.moisture_class ?? null;
+
+  useEffect(() => {
+    let unsub: (() => void) | null = null;
+    (async () => {
+      unsub = await listen<number>("sensor:auto_irrigate_triggered", (durationS) => {
+        setIrrigating(true);
+        setTimeLeft(durationS);
+      });
+    })();
+
+    return () => {
+      if (unsub) unsub();
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!irrigating || timeLeft <= 0) return;
+    const t = setTimeout(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          setIrrigating(false);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [irrigating, timeLeft]);
 
   const moistureSeries: Series[] = useMemo(
     () => [
@@ -79,6 +111,17 @@ export default function Dashboard({ events, latest, alerts }: Props) {
     } catch (e) {
       setDecision(null);
       setDecisionError(String(e));
+    }
+  }
+
+  async function handleIrrigate(durationS: number) {
+    setShowIrrigateModal(false);
+    try {
+      await invoke("trigger_irrigation", { durationS });
+      setIrrigating(true);
+      setTimeLeft(durationS);
+    } catch (e) {
+      alert("Falha ao acionar irrigacao: " + String(e));
     }
   }
 
@@ -126,15 +169,62 @@ export default function Dashboard({ events, latest, alerts }: Props) {
         />
         <div className="card flex flex-col justify-between">
           <p className="text-xs uppercase tracking-wide text-gray-500">Irrigação</p>
-          <button className="btn-primary mt-2 justify-center" onClick={decideIrrigation} disabled={!r}>
-            <ShowerHead size={16} /> Avaliar agora
-          </button>
+          <div className="mt-2 flex gap-2">
+            <button className="btn-primary flex-1 justify-center py-1.5 text-xs" onClick={decideIrrigation} disabled={!r}>
+              Avaliar
+            </button>
+            <button
+              className="rounded-lg border border-leaf-600 bg-leaf-950/20 text-leaf-400 hover:bg-leaf-950/40 hover:text-leaf-300 transition-colors text-xs font-medium px-2 py-1.5 flex flex-1 items-center justify-center gap-1.5"
+              onClick={() => setShowIrrigateModal(true)}
+              disabled={!r || irrigating}
+            >
+              <Droplets size={14} /> {irrigating ? `${timeLeft}s` : "Irrigar"}
+            </button>
+          </div>
         </div>
       </div>
 
+      {/* Modal de Duracao da Irrigacao */}
+      {showIrrigateModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+          <div className="card w-85 space-y-4 border-surface-border bg-surface-raised p-5 shadow-2xl">
+            <h3 className="text-sm font-semibold">Acionar Irrigacao</h3>
+            <p className="text-xs text-gray-400">
+              Escolha por quanto tempo o rele de agua permanecera ativado.
+            </p>
+            <div className="grid grid-cols-3 gap-2">
+              <button
+                onClick={() => handleIrrigate(10)}
+                className="rounded-lg bg-surface-overlay border border-surface-border py-2 text-xs font-medium hover:bg-surface-raised transition-colors"
+              >
+                10s
+              </button>
+              <button
+                onClick={() => handleIrrigate(30)}
+                className="rounded-lg bg-surface-overlay border border-surface-border py-2 text-xs font-medium hover:bg-surface-raised transition-colors"
+              >
+                30s
+              </button>
+              <button
+                onClick={() => handleIrrigate(60)}
+                className="rounded-lg bg-surface-overlay border border-surface-border py-2 text-xs font-medium hover:bg-surface-raised transition-colors"
+              >
+                1m
+              </button>
+            </div>
+            <button
+              onClick={() => setShowIrrigateModal(false)}
+              className="w-full rounded-lg border border-surface-border bg-surface-overlay/25 py-2 text-xs font-medium hover:bg-surface-overlay transition-colors text-gray-400"
+            >
+              Cancelar
+            </button>
+          </div>
+        </div>
+      )}
+
       {/* Decisão de irrigação */}
       {decisionError && (
-        <div className="card border-red-900 text-sm text-red-300">{decisionError}</div>
+        <div className="card border-red-950 bg-red-950/20 text-sm text-red-300">{decisionError}</div>
       )}
       {decision && (
         <div

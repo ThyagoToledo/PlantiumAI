@@ -4,7 +4,7 @@
 
 use serde::Serialize;
 use serialport::{SerialPortType, UsbPortInfo};
-use std::io::{BufRead, BufReader};
+use std::io::{BufRead, BufReader, Write};
 use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::Arc;
 use std::time::Duration;
@@ -66,6 +66,7 @@ pub struct ConnStatus {
 pub fn spawn_reader(
     port_name: String,
     stop: Arc<AtomicBool>,
+    write_rx: std::sync::mpsc::Receiver<Vec<u8>>,
     on_line: impl Fn(String) + Send + 'static,
     on_status: impl Fn(ConnStatus) + Send + 'static,
 ) {
@@ -73,7 +74,7 @@ pub fn spawn_reader(
         let mut backoff_ms: u64 = 500;
         while !stop.load(Ordering::Relaxed) {
             match serialport::new(&port_name, BAUD_RATE)
-                .timeout(Duration::from_millis(1000))
+                .timeout(Duration::from_millis(100))
                 .open()
             {
                 Ok(port) => {
@@ -94,6 +95,17 @@ pub fn spawn_reader(
                             });
                             return;
                         }
+
+                        // Verifica se ha comandos a serem escritos
+                        while let Ok(data) = write_rx.try_recv() {
+                            let inner_port = reader.get_mut();
+                            if let Err(e) = inner_port.write_all(&data) {
+                                eprintln!("[serial] erro ao escrever: {e}");
+                            } else {
+                                let _ = inner_port.flush();
+                            }
+                        }
+
                         line.clear();
                         match reader.read_line(&mut line) {
                             Ok(0) => break, // EOF — porta caiu
