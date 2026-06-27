@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Check, ArrowLeft, HelpCircle } from "lucide-react";
 import "../landing.css";
@@ -163,6 +163,18 @@ function PricingCard({
 }
 
 function GreenhouseBackground() {
+  const [particles, setParticles] = useState<{ left: number; size: number; delay: number; duration: number }[]>([]);
+
+  useEffect(() => {
+    const list = [...Array(25)].map(() => ({
+      left: Math.random() * 100,
+      size: Math.random() * 6 + 2,
+      delay: Math.random() * 18,
+      duration: Math.random() * 15 + 12,
+    }));
+    setParticles(list);
+  }, []);
+
   return (
     <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
       {/* Video de Fundo da Estufa - Zoom reduzido com scale-95 e opacidade reduzida para 15% para ficar sutil e transparente */}
@@ -184,26 +196,20 @@ function GreenhouseBackground() {
 
       {/* Particulas flutuantes de clorofila/sensorica */}
       <div className="absolute inset-0">
-        {[...Array(25)].map((_, i) => {
-          const size = Math.random() * 6 + 2;
-          const delay = Math.random() * 18;
-          const duration = Math.random() * 15 + 12;
-          const left = Math.random() * 100;
-          return (
-            <div
-              key={i}
-              className="particle"
-              style={{
-                left: `${left}%`,
-                width: `${size}px`,
-                height: `${size}px`,
-                // @ts-ignore
-                "--delay": `${delay}s`,
-                "--duration": `${duration}s`,
-              }}
-            />
-          );
-        })}
+        {particles.map((p, i) => (
+          <div
+            key={i}
+            className="particle"
+            style={{
+              left: `${p.left}%`,
+              width: `${p.size}px`,
+              height: `${p.size}px`,
+              // @ts-ignore
+              "--delay": `${p.delay}s`,
+              "--duration": `${p.duration}s`,
+            }}
+          />
+        ))}
       </div>
 
       <style dangerouslySetInnerHTML={{ __html: `
@@ -391,37 +397,37 @@ export default function PlanosPage() {
           <PricingCard
             title="Software Assinatura"
             tag="PREMIUM · O ANZOL"
-            description="Aluguel mensal do software integrado e locação completa das placas ESP32 e sensores. Instalação inclusa."
-            monthlyPrice={179}
-            annualPrice={149}
+            description="Aluguel mensal completo: locação das placas ESP32, sensores, conectividade 4G LTE ativa, suporte remoto e alertas (sem painel LED)."
+            monthlyPrice={299}
+            annualPrice={249}
             billingPeriod={billingPeriod}
             isPopular={true}
             badgeText="Recomendado"
             buttonText="Assinar Premium"
             buttonLink="/login"
             features={[
-              "Locação das placas ESP32 e sensores",
+              "Locação das placas ESP32 e sensores inclusa",
+              "Conectividade 4G redundante ativa (SIM card)",
               "Monitoramento completo (Ar, Solo, CO₂ e Luz)",
               "Painel Web e Desktop (Offline-First em Rust)",
               "Diagnósticos avançados e alertas via WhatsApp",
-              "Mecanismo de controle fail-safe local",
-              "Instalação física e calibração inclusas",
-              "Suporte e manutenção remota",
+              "Instalação física e calibração básica inclusas",
+              "Suporte técnico e manutenção de hardware",
             ]}
           />
 
           <PricingCard
             title="Aquisição Total"
             tag="PRO · A ESCALA"
-            description="Venda direta do hardware proprietário (kit único de R$ 1.010,08) mais assinatura enxuta do software de gestão."
-            monthlyPrice={59}
-            annualPrice={49}
+            description="O cliente adquire a propriedade do hardware próprio (a partir de R$ 1.010,08) e paga uma assinatura enxuta apenas pelo software e alertas."
+            monthlyPrice={79}
+            annualPrice={59}
             billingPeriod={billingPeriod}
             buttonText="Adquirir Kit Pro"
             buttonLink="/login"
             features={[
               "Propriedade definitiva do hardware IoT",
-              "Baixo custo recorrente de software",
+              "Taxa recorrente de software altamente reduzida",
               "Emulador de biomas completo integrado",
               "Suporte a controle dinâmico multi-estufas",
               "1 ano de manutenção presencial inclusa",
@@ -457,8 +463,8 @@ export default function PlanosPage() {
                 <tr className="hover:bg-emerald-500/5 transition-colors">
                   <td className="p-4 font-medium text-[#9fb4a8]">Custo do Hardware IoT (CapEx)</td>
                   <td className="p-4">-</td>
-                  <td className="p-4">Sem Custo Adicional</td>
-                  <td className="p-4">R$ 1.010,08 (Protótipo) / R$ 1.705,22 (Pro)</td>
+                  <td className="p-4">Sem Custo Inicial</td>
+                  <td className="p-4">R$ 1.010,08 (Básico) / R$ 1.705,22 (Pro)<br /><span className="text-xs text-[#9fb4a8]">(com LED: +R$ 850,00 ou +R$ 1.150,00)</span></td>
                 </tr>
                 <tr className="hover:bg-emerald-500/5 transition-colors">
                   <td className="p-4 font-medium text-[#9fb4a8]">Coleta de Dados (Sensores)</td>
@@ -469,8 +475,8 @@ export default function PlanosPage() {
                 <tr className="hover:bg-emerald-500/5 transition-colors">
                   <td className="p-4 font-medium text-[#9fb4a8]">Suplementação Luminosa</td>
                   <td className="p-4">-</td>
-                  <td className="p-4">Sim (Automatizado por LEDs)</td>
-                  <td className="p-4">Sim (Automatizado por LEDs)</td>
+                  <td className="p-4">Opcional (Locação painel LED)</td>
+                  <td className="p-4">Opcional (Compra do painel LED)</td>
                 </tr>
                 <tr className="hover:bg-emerald-500/5 transition-colors">
                   <td className="p-4 font-medium text-[#9fb4a8]">Operação Offline-First</td>
@@ -493,8 +499,8 @@ export default function PlanosPage() {
                 <tr className="hover:bg-emerald-500/5 transition-colors">
                   <td className="p-4 font-medium text-[#9fb4a8]">Mão de obra e Instalação</td>
                   <td className="p-4">-</td>
-                  <td className="p-4">Inclusa</td>
-                  <td className="p-4">R$ 590,00</td>
+                  <td className="p-4">Inclusa (Básica) / +R$ 200,00 (LED)</td>
+                  <td className="p-4">R$ 590,00 (Sem LED) / R$ 790,00 (Com LED)</td>
                 </tr>
                 <tr className="hover:bg-emerald-500/5 transition-colors">
                   <td className="p-4 font-medium text-[#9fb4a8]">Suporte e Manutenção</td>
@@ -527,19 +533,21 @@ export default function PlanosPage() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 items-stretch">
             {/* Kit básico */}
-            {/* Kit básico */}
             <div className="relative rounded-3xl p-7 flex flex-col bg-[#12211a]/30 border border-[#78c896]/10 backdrop-blur-md shadow-black/40 shadow-2xl">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#6c8478]">Equipamento</span>
               <h3 className="font-display font-extrabold text-2xl mt-1 text-[#eaf3ee]">Kit Protótipo IoT</h3>
-              <div className="mt-4 mb-5 flex items-baseline gap-1">
-                <span className="text-[#9fb4a8] text-lg font-medium">R$</span>
-                <span className="text-4xl font-extrabold tracking-tight text-[#eaf3ee]">1.010</span>
-                <span className="text-[#9fb4a8] text-sm">,08/único</span>
+              <div className="mt-4 mb-2 flex items-baseline gap-1">
+                <span className="text-[#9fb4a8] text-sm font-medium">Sem LED:</span>
+                <span className="text-xl font-bold text-[#eaf3ee]">R$ 1.010,08</span>
+              </div>
+              <div className="mb-5 flex items-baseline gap-1">
+                <span className="text-emerald-400 text-sm font-semibold">Com LED:</span>
+                <span className="text-2xl font-extrabold text-emerald-400">R$ 1.860,08</span>
               </div>
               <ul className="space-y-3 text-sm">
                 <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Placa ESP32 central configurada localmente</span></li>
                 <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Sensores de umidade (solo/ar), temp, luz e CO₂</span></li>
-                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#9fb4a8]">CapEx real homologado no slide deck 2026</span></li>
+                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Opcional: Painel LED Grow Light Full Spectrum 100W (+R$ 850,00)</span></li>
               </ul>
             </div>
 
@@ -547,15 +555,18 @@ export default function PlanosPage() {
             <div className="relative rounded-3xl p-7 flex flex-col bg-[#12211a]/30 border border-[#78c896]/10 backdrop-blur-md shadow-black/40 shadow-2xl">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-[#6c8478]">Equipamento</span>
               <h3 className="font-display font-extrabold text-2xl mt-1 text-[#eaf3ee]">Kit Expansão Pro</h3>
-              <div className="mt-4 mb-5 flex items-baseline gap-1">
-                <span className="text-[#9fb4a8] text-lg font-medium">R$</span>
-                <span className="text-4xl font-extrabold tracking-tight text-[#eaf3ee]">2.490</span>
-                <span className="text-[#9fb4a8] text-sm">/único</span>
+              <div className="mt-4 mb-2 flex items-baseline gap-1">
+                <span className="text-[#9fb4a8] text-sm font-medium">Sem LED:</span>
+                <span className="text-xl font-bold text-[#eaf3ee]">R$ 1.705,22</span>
+              </div>
+              <div className="mb-5 flex items-baseline gap-1">
+                <span className="text-emerald-400 text-sm font-semibold">Com LED:</span>
+                <span className="text-2xl font-extrabold text-emerald-400">R$ 2.855,22</span>
               </div>
               <ul className="space-y-3 text-sm">
-                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Sensores industriais com calibração avançada</span></li>
-                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Câmera com suporte a IA de Visão Computacional</span></li>
-                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#9fb4a8]">Indicado para cultivos comerciais de larga escala</span></li>
+                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Sensores de precisão + Câmera IP67 (IA YOLO)</span></li>
+                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Indicado para estufas comerciais e containers</span></li>
+                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-[#14291e]/50 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Opcional: Painel LED Profissional Multicor (+R$ 1.150,00)</span></li>
               </ul>
             </div>
 
@@ -563,14 +574,17 @@ export default function PlanosPage() {
             <div className="relative rounded-3xl p-7 flex flex-col bg-[#14291e]/50 border border-[#34d977]/40 backdrop-blur-md shadow-[0_0_40px_rgba(52,217,119,0.12)]">
               <span className="text-[11px] font-extrabold uppercase tracking-wider text-emerald-400">Mão de obra</span>
               <h3 className="font-display font-extrabold text-2xl mt-1 text-[#eaf3ee]">Instalação Física</h3>
-              <div className="mt-4 mb-5 flex items-baseline gap-1">
-                <span className="text-[#9fb4a8] text-lg font-medium">R$</span>
-                <span className="text-4xl font-extrabold tracking-tight text-[#eaf3ee]">590</span>
-                <span className="text-[#9fb4a8] text-sm">/único</span>
+              <div className="mt-4 mb-2 flex items-baseline gap-1">
+                <span className="text-[#9fb4a8] text-sm font-medium">Básica (Sem LED):</span>
+                <span className="text-xl font-bold text-[#eaf3ee]">R$ 590,00</span>
+              </div>
+              <div className="mb-5 flex items-baseline gap-1">
+                <span className="text-emerald-400 text-sm font-semibold">Completa (Com LED):</span>
+                <span className="text-2xl font-extrabold text-emerald-400">R$ 790,00</span>
               </div>
               <ul className="space-y-3 text-sm">
-                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-emerald-500/10 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">8 horas de serviço em campo (8 × R$ 55,00/h)</span></li>
-                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-emerald-500/10 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Montagem, calibração local e testes operacionais</span></li>
+                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-emerald-500/10 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Básica: 8 horas em campo (calibração e fixação)</span></li>
+                <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-emerald-500/10 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#d8e6df]">Com LED: 12 horas em campo + cabeamento de potência</span></li>
                 <li className="flex items-start gap-3"><div className="p-0.5 rounded-full shrink-0 mt-0.5 bg-emerald-500/10 text-emerald-400"><Check className="w-3.5 h-3.5" /></div><span className="text-[#9fb4a8]">Área de cobertura: Goiânia e região metropolitana</span></li>
               </ul>
             </div>
@@ -593,6 +607,75 @@ export default function PlanosPage() {
           </div>
         </section>
 
+        {/* Retorno Financeiro e Viabilidade */}
+        <section className="mb-20">
+          <div className="text-center max-w-2xl mx-auto mb-10">
+            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-xs font-bold uppercase tracking-wider text-emerald-400">
+              Viabilidade e ROI · Embasamento Real
+            </span>
+            <h2 className="font-display font-extrabold text-3xl sm:text-4xl mt-6 tracking-tight leading-tight text-[#eaf3ee]">
+              Retorno financeiro e mitigação
+            </h2>
+            <p className="text-[#9fb4a8] text-base mt-4 leading-relaxed">
+              Entenda como a automação de precisão e a IA em malha fechada protegem a margem do produtor e viabilizam a operação.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-8 items-stretch">
+            {/* Bloco 1: Viabilidade do Aluguel */}
+            <div className="p-8 rounded-3xl border border-emerald-500/10 bg-[#12211a]/20 backdrop-blur-md flex flex-col justify-between">
+              <div>
+                <h3 className="font-display font-extrabold text-xl text-[#eaf3ee] mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#34d977] inline-block animate-pulse" />
+                  Modelagem Financeira HaaS e Viabilidade
+                </h3>
+                <p className="text-sm text-[#9fb4a8] leading-relaxed mb-4">
+                  No plano **Premium (Software Assinatura)**, a PlantiumAI subsidia 100% do investimento inicial em hardware (ESP32 central, fiação, sensores radiculares e atuadores) no modelo de locação (HaaS). 
+                </p>
+                <p className="text-sm text-[#9fb4a8] leading-relaxed">
+                  O valor de **R$ 299,00/mês** (ou **R$ 249,00/mês** no anual) foi desenhado para viabilizar essa amortização dos dispositivos (CapEx aproximado de R$ 1.010,08) juntamente com a sustentabilidade do chip de telemetria 4G LTE dedicado (**R$ 60,00/mês**), infraestrutura do banco de dados na nuvem e processamento dos prompts agronômicos via API.
+                </p>
+              </div>
+              <div className="mt-6 pt-6 border-t border-emerald-500/10 text-xs text-[#34d977] font-mono">
+                PAYBACK ESTIMADO DO HARDWARE EM COBERTURA: ~10 MESES
+              </div>
+            </div>
+
+            {/* Bloco 2: Métricas de ROI e Perdas */}
+            <div className="p-8 rounded-3xl border border-emerald-500/10 bg-[#12211a]/20 backdrop-blur-md flex flex-col justify-between">
+              <div>
+                <h3 className="font-display font-extrabold text-xl text-[#eaf3ee] mb-4 flex items-center gap-2">
+                  <span className="w-2 h-2 rounded-full bg-[#34d977] inline-block animate-pulse" />
+                  Mitigação de Perdas e Eficiência Agrícola
+                </h3>
+                <ul className="space-y-4 text-sm text-[#9fb4a8]">
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                    <span>
+                      <strong className="text-[#eaf3ee]">Até 85% de redução</strong> na perda total de ciclos produtivos por estresse térmico/hídrico não identificado ou erro humano.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                    <span>
+                      <strong className="text-[#eaf3ee]">Até 40% de economia</strong> de água e nutrientes na irrigação pulsada automática em malha fechada.
+                    </span>
+                  </li>
+                  <li className="flex items-start gap-3">
+                    <div className="w-1.5 h-1.5 rounded-full bg-emerald-400 mt-2 shrink-0" />
+                    <span>
+                      <strong className="text-[#eaf3ee]">Proteção de Receita</strong>: Evitar uma única quebra de safra em estufa vertical (como cultivo de morango ou folhosas especiais) preserva até <strong className="text-[#eaf3ee]">R$ 15.000,00</strong> por ciclo de cultivo.
+                    </span>
+                  </li>
+                </ul>
+              </div>
+              <div className="mt-6 pt-6 border-t border-emerald-500/10 text-xs text-[#34d977] font-mono">
+                Fontes: EMBRAPA Hortaliças · CNA 2026 · FAO · VarejoIN
+              </div>
+            </div>
+          </div>
+        </section>
+
         {/* FAQs */}
         <section className="max-w-4xl mx-auto mb-12">
           <h2 className="font-display font-semibold text-2xl text-center mb-8 text-[#eaf3ee]">
@@ -605,7 +688,7 @@ export default function PlanosPage() {
                 O kit de hardware e a instalação já estão inclusos na assinatura?
               </h4>
               <p className="text-sm text-[#9fb4a8] leading-relaxed">
-                Não. São pagamentos únicos, separados da mensalidade: o kit protótipo IoT custa R$ 1.010,08 e a versão de expansão Pro custa R$ 2.490,00; a instalação física em campo custa R$ 590,00 (Goiânia e região metropolitana, com acréscimo de deslocamento para outras cidades). No plano Premium (Software Assinatura), a locação do hardware já está inclusa na assinatura mensal.
+                Não. São pagamentos únicos, separados da mensalidade: o kit protótipo IoT custa R$ 1.010,08 (R$ 1.860,08 com LED de suplementação) e a versão de expansão Pro custa R$ 1.705,22 (R$ 2.855,22 com LED profissional); a instalação física em campo custa R$ 590,00 (básica) ou R$ 790,00 (completa com suporte LED). No plano Premium (Software Assinatura), a locação básica do hardware já está inclusa na assinatura mensal.
               </p>
             </div>
             <div className="p-6 rounded-2xl border border-emerald-500/10 bg-[#12211a]/20 backdrop-blur-sm hover:border-emerald-500/20 transition-all duration-300">
