@@ -373,6 +373,61 @@ const HTML = `
     <p style="text-align:center; font-size:13px; color:var(--text-faint); margin:30px auto 0; max-width:720px;">Crédito acadêmico — Trabalho Científico, Engenharia de Software, Faculdade SENAI FATESG, Goiânia/GO, 2026. Orientador: Prof. Renato Ribeiro dos Santos.</p>
   </section>
 
+  <!-- PARCEIROS -->
+  <section id="parceiros" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:48px 24px 40px;">
+    <div style="text-align:center; max-width:620px; margin:0 auto 44px;">
+      <div style="font-size:13px; font-weight:600; letter-spacing:0.06em; text-transform:uppercase; color:var(--brand-green);">Parcerias Estratégicas</div>
+      <h2 style="font-family:'Sora',sans-serif; font-weight:700; font-size:clamp(28px,3.4vw,40px); line-height:1.15; letter-spacing:-0.01em; margin:14px 0 0;">Parceiros e Apoiadores</h2>
+    </div>
+
+    <!-- Integrantes Parceiros -->
+    <div style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint); margin-bottom:24px; text-align:center;">Membros & Cargos</div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:22px; margin-bottom:56px;" class="plf-team">
+      ${[
+        { photo: "/landing/cirineu.png", name: "Cirineu C. Fernandes", role: "Co-fundador · SiriNEO Technologies", badge: "ITA Egresso", bio: "Engenheiro egresso do ITA. Atua na cooperacao tecnologica de hardware e integracao de sistemas aeroespaciais/defesa aplicados ao projeto." },
+        { photo: "/landing/juliana.png", name: "Juliana C. V. Fernandes", role: "Co-fundadora · SiriNEO Technologies", badge: "ITA Egressa", bio: "Engenheira egressa do ITA. Apoia o desenvolvimento de sistemas distribuidos e arquitetura de instrumentacao eletronica para micro estufas." },
+        { photo: "/landing/renato.png", name: "Prof. Renato Ribeiro dos Santos", role: "Orientador · Diretor FPM & Fundador VarejoIN", badge: "FPM / VarejoIN", bio: "Diretor da Faculdade de Principios Militares (FPM) e fundador da empresa VarejoIN. Orientador cientifico do projeto PlantiumAI." }
+      ]
+        .map(
+          (m) => `<div class="plf-team-card" style="border-radius:24px; overflow:hidden; background:var(--surface-glass); -webkit-backdrop-filter:blur(16px); backdrop-filter:blur(16px); border:1px solid var(--border-glass); box-shadow:var(--shadow-soft);">
+          <div style="position:relative; aspect-ratio:4/5; overflow:hidden;">
+            <img src="${m.photo}" alt="${m.name}" style="width:100%; height:100%; object-fit:cover; object-position:center 18%;"/>
+            <div style="position:absolute; inset:0; background:linear-gradient(180deg,transparent 55%,rgba(6,18,11,0.78) 100%);"></div>
+            <span style="position:absolute; left:14px; bottom:12px; display:inline-flex; align-items:center; gap:6px; padding:5px 11px; border-radius:999px; background:rgba(52,217,119,0.92); color:#06120b; font-size:11.5px; font-weight:700;">${m.badge}</span>
+          </div>
+          <div style="padding:18px 18px 22px;">
+            <div style="font-family:'Sora',sans-serif; font-weight:600; font-size:16.5px; line-height:1.25;">${m.name}</div>
+            <div style="font-size:13px; font-weight:600; color:var(--brand-green); margin-top:6px;">${m.role}</div>
+            <p style="font-size:13px; line-height:1.5; color:var(--text-muted); margin:10px 0 0;">${m.bio}</p>
+          </div>
+        </div>`,
+        )
+        .join("")}
+    </div>
+
+    <!-- Empresas e Instituições Parceiras -->
+    <div style="font-size:13px; font-weight:600; text-transform:uppercase; letter-spacing:0.08em; color:var(--text-faint); margin-bottom:28px; text-align:center;">Empresas & Instituicoes</div>
+    <div style="display:grid; grid-template-columns:repeat(3,1fr); gap:32px; align-items:center;" class="plf-pillars">
+      ${[
+        { logo: "/landing/logo-sirineo.png", name: "SiriNEO Technologies", desc: "Empresa de tecnologia avancada fundada por engenheiros do ITA, focada em desenvolvimento de hardware robusto e sistemas inteligentes." },
+        { logo: "/landing/logo-fpm.png", name: "FPM · Faculdade de Principios Militares", desc: "Instituicao de ensino superior dedicada à formacao de liderancas com base em principios de disciplina, gestao e rigor cientifico." },
+        { logo: "/landing/logo-varejoin.png", name: "VarejoIN", desc: "Empresa focada em tecnologia de dados, inteligencia comercial e integracao de negocios digitais aplicada ao setor de distribuicao." }
+      ]
+        .map(
+          (c) => `<div style="padding:28px; border-radius:24px; background:var(--surface-solid); border:1px solid var(--border-glass); box-shadow:var(--shadow-soft); text-align:center; display:flex; flex-direction:column; align-items:center; gap:16px;">
+          <div style="width:72px; height:72px; display:flex; align-items:center; justify-content:center; border-radius:50%; background:rgba(255,255,255,0.02); overflow:hidden;">
+            <img src="${c.logo}" alt="${c.name}" style="max-width:100%; max-height:100%; object-fit:contain;"/>
+          </div>
+          <div>
+            <div style="font-family:'Sora',sans-serif; font-weight:700; font-size:15px; color:var(--text-base);">${c.name}</div>
+            <p style="font-size:13px; line-height:1.55; color:var(--text-muted); margin:8px 0 0;">${c.desc}</p>
+          </div>
+        </div>`,
+        )
+        .join("")}
+    </div>
+  </section>
+
   <!-- CTA FINAL -->
   <section id="contato" style="position:relative; z-index:1; max-width:1180px; margin:0 auto; padding:40px 24px 72px;">
     <div style="padding:56px 40px; border-radius:28px; text-align:center; background:linear-gradient(135deg,var(--brand-green),var(--brand-green-deep)); box-shadow:0 24px 56px rgba(22,163,74,0.4); position:relative; overflow:hidden;">
