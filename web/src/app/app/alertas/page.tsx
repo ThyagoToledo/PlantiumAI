@@ -3,7 +3,7 @@ import { auth } from "@/auth";
 import { db } from "@/db";
 import { alerts } from "@/db/schema";
 import { DemoAlertas } from "@/components/app/demo-alertas";
-import { getRealSummary } from "@/lib/real-data";
+import { safeRealSummary } from "@/lib/real-data";
 import { resolveAlertAction } from "./actions";
 
 export const dynamic = "force-dynamic";
@@ -21,7 +21,7 @@ const SEV = {
 export default async function AlertasPage() {
   const session = await auth();
   const companyId = session?.user?.companyId ?? null;
-  const summary = companyId ? await getRealSummary(companyId) : null;
+  const summary = companyId ? await safeRealSummary(companyId) : null;
 
   if (!companyId || !summary?.hasDevices) {
     return <DemoAlertas />;

@@ -24,6 +24,22 @@ export interface RealSummary {
   sensorCount: number;
 }
 
+/**
+ * Versão tolerante: retorna null se as tabelas IoT ainda não existirem no
+ * banco (migração 0001 pendente) — as páginas caem no modo demonstração em
+ * vez de quebrar em produção.
+ */
+export async function safeRealSummary(
+  companyId: string,
+): Promise<RealSummary | null> {
+  try {
+    return await getRealSummary(companyId);
+  } catch (err) {
+    console.error("real-data: migração 0001 pendente?", err);
+    return null;
+  }
+}
+
 export async function getRealSummary(companyId: string): Promise<RealSummary> {
   const [devs, locs, sens] = await Promise.all([
     db

@@ -57,19 +57,43 @@ export default async function DispositivosPage() {
   if (session!.user.role !== "empresa") redirect("/app");
   const companyId = session!.user.companyId;
 
-  const [locs, devs] = companyId
-    ? await Promise.all([
-        db
-          .select({ id: locations.id, name: locations.name })
-          .from(locations)
-          .where(eq(locations.companyId, companyId)),
-        db
+  const locs = companyId
+    ? await db
+        .select({ id: locations.id, name: locations.name })
+        .from(locations)
+        .where(eq(locations.companyId, companyId))
+    : [];
+
+  // Tabela nova — se a migração 0001 ainda não foi aplicada, avisa em vez de quebrar.
+  let devs: (typeof devices.$inferSelect)[] = [];
+  let migrationPending = false;
+  try {
+    devs = companyId
+      ? await db
           .select()
           .from(devices)
           .where(eq(devices.companyId, companyId))
-          .orderBy(desc(devices.createdAt)),
-      ])
-    : [[], []];
+          .orderBy(desc(devices.createdAt))
+      : [];
+  } catch (err) {
+    console.error("dispositivos: migração 0001 pendente?", err);
+    migrationPending = true;
+  }
+
+  if (migrationPending) {
+    return (
+      <div className="flex flex-col gap-6">
+        <header>
+          <h1 className="font-display text-2xl font-700">Dispositivos</h1>
+        </header>
+        <section className="rounded-2xl glass p-8 text-center text-muted">
+          O banco ainda não tem as tabelas de dispositivos. Aplique a migração{" "}
+          <code>web/drizzle/0001_iot_devices.sql</code> no Neon (SQL Editor) e
+          recarregue esta página.
+        </section>
+      </div>
+    );
+  }
 
   const deviceIds = devs.map((d) => d.id);
   const [acts, tokens, sens, lastCommands] =

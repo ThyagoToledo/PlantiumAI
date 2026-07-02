@@ -5,8 +5,8 @@ import { RealOverview } from "@/components/app/real-overview";
 import {
   getLatestMetrics,
   getOpenAlerts,
-  getRealSummary,
   getSeries,
+  safeRealSummary,
 } from "@/lib/real-data";
 
 // Dados vêm do banco a cada request (telemetria muda o tempo todo).
@@ -22,8 +22,8 @@ export default async function DashboardPage() {
   const name = session?.user?.name?.split(" ")[0] ?? "Produtor";
 
   if (companyId) {
-    const summary = await getRealSummary(companyId);
-    if (summary.hasDevices) {
+    const summary = await safeRealSummary(companyId);
+    if (summary?.hasDevices) {
       const [latest, series, alerts] = await Promise.all([
         getLatestMetrics(companyId),
         getSeries(companyId, 24),

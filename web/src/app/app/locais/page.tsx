@@ -56,20 +56,28 @@ export default async function LocaisPage() {
     );
   }
 
-  const [devs, sens, openAlerts] = await Promise.all([
-    db
-      .select({ id: devices.id, locationId: devices.locationId, lastSeenAt: devices.lastSeenAt })
-      .from(devices)
-      .where(eq(devices.companyId, companyId)),
-    db
-      .select({ id: sensors.id, locationId: sensors.locationId })
-      .from(sensors)
-      .where(eq(sensors.companyId, companyId)),
-    db
-      .select({ id: alerts.id, locationId: alerts.locationId })
-      .from(alerts)
-      .where(eq(alerts.companyId, companyId)),
-  ]);
+  const sens = await db
+    .select({ id: sensors.id, locationId: sensors.locationId })
+    .from(sensors)
+    .where(eq(sensors.companyId, companyId));
+
+  // Tabelas IoT podem não existir ainda (migração 0001 pendente).
+  let devs: Array<{ id: string; locationId: string | null; lastSeenAt: Date | null }> = [];
+  let openAlerts: Array<{ id: string; locationId: string | null }> = [];
+  try {
+    [devs, openAlerts] = await Promise.all([
+      db
+        .select({ id: devices.id, locationId: devices.locationId, lastSeenAt: devices.lastSeenAt })
+        .from(devices)
+        .where(eq(devices.companyId, companyId)),
+      db
+        .select({ id: alerts.id, locationId: alerts.locationId })
+        .from(alerts)
+        .where(eq(alerts.companyId, companyId)),
+    ]);
+  } catch (err) {
+    console.error("locais: migração 0001 pendente?", err);
+  }
 
   const now = Date.now();
   const view = locs.map((lo) => {
